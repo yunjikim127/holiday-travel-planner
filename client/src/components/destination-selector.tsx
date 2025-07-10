@@ -112,10 +112,10 @@ export default function DestinationSelector({ userId }: DestinationSelectorProps
                 size="sm"
                 onClick={() => handleAddDestination(country.code, country.nameKr)}
                 disabled={isCountrySelected(country.code) || addDestinationMutation.isPending}
-                className={`p-2 text-sm transition-colors font-bold border-0 ${
+                className={`p-2 text-sm transition-colors border-2 ${
                   isCountrySelected(country.code)
-                    ? 'bg-blue-700 text-white'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    ? 'bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed'
+                    : 'bg-white text-black border-gray-300 hover:border-blue-500 hover:bg-blue-50'
                 }`}
               >
                 {country.emoji} {country.nameKr}
@@ -146,10 +146,10 @@ export default function DestinationSelector({ userId }: DestinationSelectorProps
                 size="sm"
                 onClick={() => handleAddDestination(country.code, country.nameKr)}
                 disabled={isCountrySelected(country.code) || addDestinationMutation.isPending}
-                className={`w-full justify-start text-sm font-bold border-0 ${
+                className={`w-full justify-start text-sm border-2 ${
                   isCountrySelected(country.code)
-                    ? 'bg-gray-400 text-white cursor-not-allowed'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    ? 'bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed'
+                    : 'bg-white text-black border-gray-300 hover:border-blue-500 hover:bg-blue-50'
                 }`}
               >
                 {country.emoji} {country.nameKr} ({country.name})
