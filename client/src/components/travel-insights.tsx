@@ -11,11 +11,44 @@ export default function TravelInsights({ destinations }: TravelInsightsProps) {
   const currentMonth = 5; // May
   const currentYear = 2024;
 
+  // Fixed queries for travel insights
+  const usInsights = useQuery<TravelInsight>({
+    queryKey: ["/api/insights", "US", currentMonth, currentYear],
+    enabled: destinations.some(d => d.countryCode === "US"),
+  });
+
+  const jpInsights = useQuery<TravelInsight>({
+    queryKey: ["/api/insights", "JP", currentMonth, currentYear],
+    enabled: destinations.some(d => d.countryCode === "JP"),
+  });
+
+  const thInsights = useQuery<TravelInsight>({
+    queryKey: ["/api/insights", "TH", currentMonth, currentYear],
+    enabled: destinations.some(d => d.countryCode === "TH"),
+  });
+
+  const vnInsights = useQuery<TravelInsight>({
+    queryKey: ["/api/insights", "VN", currentMonth, currentYear],
+    enabled: destinations.some(d => d.countryCode === "VN"),
+  });
+
   const insights = destinations.map(destination => {
-    const { data } = useQuery<TravelInsight>({
-      queryKey: ["/api/insights", destination.countryCode, currentMonth, currentYear],
-    });
-    return { destination, insight: data };
+    let insight: TravelInsight | undefined;
+    switch (destination.countryCode) {
+      case "US":
+        insight = usInsights.data;
+        break;
+      case "JP":
+        insight = jpInsights.data;
+        break;
+      case "TH":
+        insight = thInsights.data;
+        break;
+      case "VN":
+        insight = vnInsights.data;
+        break;
+    }
+    return { destination, insight };
   });
 
   const getScoreColor = (score: 'good' | 'fair' | 'poor' | 'low' | 'medium' | 'high') => {

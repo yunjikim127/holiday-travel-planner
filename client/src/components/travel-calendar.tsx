@@ -23,11 +23,44 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
     queryKey: ["/api/user", userId, "custom-holidays"],
   });
 
-  // Get holidays for all selected destinations
+  // Get holidays for selected destinations with fixed queries
+  const usDestinationHolidays = useQuery<Holiday[]>({
+    queryKey: ["/api/holidays", "US", currentYear],
+    enabled: destinations.some(d => d.countryCode === "US"),
+  });
+
+  const jpDestinationHolidays = useQuery<Holiday[]>({
+    queryKey: ["/api/holidays", "JP", currentYear],
+    enabled: destinations.some(d => d.countryCode === "JP"),
+  });
+
+  const thDestinationHolidays = useQuery<Holiday[]>({
+    queryKey: ["/api/holidays", "TH", currentYear],
+    enabled: destinations.some(d => d.countryCode === "TH"),
+  });
+
+  const vnDestinationHolidays = useQuery<Holiday[]>({
+    queryKey: ["/api/holidays", "VN", currentYear],
+    enabled: destinations.some(d => d.countryCode === "VN"),
+  });
+
+  // Map destination holidays
   const destinationHolidays = destinations.map(dest => {
-    const { data: holidays = [] } = useQuery<Holiday[]>({
-      queryKey: ["/api/holidays", dest.countryCode, currentYear],
-    });
+    let holidays: Holiday[] = [];
+    switch (dest.countryCode) {
+      case "US":
+        holidays = usDestinationHolidays.data || [];
+        break;
+      case "JP":
+        holidays = jpDestinationHolidays.data || [];
+        break;
+      case "TH":
+        holidays = thDestinationHolidays.data || [];
+        break;
+      case "VN":
+        holidays = vnDestinationHolidays.data || [];
+        break;
+    }
     return { countryCode: dest.countryCode, holidays };
   });
 
