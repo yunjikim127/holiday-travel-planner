@@ -51,10 +51,7 @@ export default function VacationRecommendations({ userId, destinations }: Vacati
 
   const createVacationPlanMutation = useMutation({
     mutationFn: async (plan: InsertVacationPlan) => {
-      return apiRequest('/api/vacation-plans', {
-        method: 'POST',
-        body: JSON.stringify(plan),
-      });
+      return apiRequest('POST', '/api/vacation-plans', plan);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/user', userId, 'vacation-plans'] });
