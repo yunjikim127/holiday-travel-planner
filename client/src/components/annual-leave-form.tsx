@@ -47,54 +47,56 @@ export default function AnnualLeaveForm({ userId, user }: AnnualLeaveFormProps) 
   const remainingLeaves = totalLeaves - usedLeaves;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <CalendarCheck className="text-vacation-green mr-2" size={20} />
+    <Card className="overflow-hidden">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center text-base">
+          <CalendarCheck className="text-vacation-green mr-2" size={16} />
           연차 설정
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <Label htmlFor="totalLeaves" className="block text-sm font-medium text-gray-700 mb-2">
-            총 연차 일수
-          </Label>
-          <Input
-            id="totalLeaves"
-            type="number"
-            value={totalLeaves}
-            onChange={(e) => setTotalLeaves(parseInt(e.target.value) || 0)}
-            min="0"
-            max="25"
-            className="w-full"
-          />
+      <CardContent className="space-y-3 pt-0">
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label htmlFor="totalLeaves" className="text-xs font-medium text-gray-700 mb-1 block">
+              총 연차
+            </Label>
+            <Input
+              id="totalLeaves"
+              type="number"
+              value={totalLeaves}
+              onChange={(e) => setTotalLeaves(parseInt(e.target.value) || 0)}
+              min="0"
+              max="25"
+              className="h-8 text-sm"
+            />
+          </div>
+          <div>
+            <Label htmlFor="usedLeaves" className="text-xs font-medium text-gray-700 mb-1 block">
+              사용 연차
+            </Label>
+            <Input
+              id="usedLeaves"
+              type="number"
+              value={usedLeaves}
+              onChange={(e) => setUsedLeaves(parseInt(e.target.value) || 0)}
+              min="0"
+              max={totalLeaves}
+              className="h-8 text-sm"
+            />
+          </div>
         </div>
-        <div>
-          <Label htmlFor="usedLeaves" className="block text-sm font-medium text-gray-700 mb-2">
-            사용한 연차
-          </Label>
-          <Input
-            id="usedLeaves"
-            type="number"
-            value={usedLeaves}
-            onChange={(e) => setUsedLeaves(parseInt(e.target.value) || 0)}
-            min="0"
-            max={totalLeaves}
-            className="w-full"
-          />
-        </div>
-        <div className="bg-blue-50 border border-blue-200 p-3 rounded-md">
-          <p className="text-sm text-blue-700 font-medium">
+        <div className="bg-blue-50 border border-blue-200 p-2 rounded-md">
+          <p className="text-xs text-blue-700 font-medium">
             남은 연차: {remainingLeaves}일
           </p>
         </div>
-        <button
+        <Button
           onClick={handleSave}
           disabled={updateUserMutation.isPending}
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold rounded-md px-4 py-2 transition-colors disabled:opacity-50"
+          className="w-full h-8 text-sm"
         >
-          {updateUserMutation.isPending ? "저장 중..." : "💾 저장"}
-        </button>
+          {updateUserMutation.isPending ? "저장 중..." : "저장"}
+        </Button>
       </CardContent>
     </Card>
   );

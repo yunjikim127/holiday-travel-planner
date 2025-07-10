@@ -86,34 +86,33 @@ export default function CustomHolidaysForm({ userId }: CustomHolidaysFormProps) 
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <PlusCircle className="text-gray-600 mr-2" size={20} />
+    <Card className="overflow-hidden">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center text-base">
+          <PlusCircle className="text-purple-500 mr-2" size={16} />
           회사 휴무일 추가
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 pt-0">
         <div className="space-y-2">
           <Input
             type="date"
             value={newDate}
             onChange={(e) => setNewDate(e.target.value)}
-            className="w-full"
+            className="h-8 text-sm"
           />
           <Input
             type="text"
             placeholder="휴무일 이름 (예: 창립기념일)"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
-            className="w-full"
+            className="h-8 text-sm"
           />
           <Button
             onClick={handleAdd}
             disabled={addHolidayMutation.isPending}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold border-0"
+            className="w-full h-8 text-sm"
           >
-            <PlusCircle size={16} className="mr-2" />
             {addHolidayMutation.isPending ? "추가 중..." : "추가"}
           </Button>
         </div>
@@ -122,7 +121,7 @@ export default function CustomHolidaysForm({ userId }: CustomHolidaysFormProps) 
           {customHolidays.map((holiday) => (
             <div
               key={holiday.id}
-              className="flex justify-between items-center p-2 bg-gray-50 rounded text-sm"
+              className="flex justify-between items-center p-2 bg-gray-50 rounded text-xs"
             >
               <span>
                 {holiday.name} ({new Date(holiday.date).toLocaleDateString('ko-KR')})
@@ -132,14 +131,14 @@ export default function CustomHolidaysForm({ userId }: CustomHolidaysFormProps) 
                 size="sm"
                 onClick={() => handleDelete(holiday.id)}
                 disabled={deleteHolidayMutation.isPending}
-                className="text-red-500 hover:text-red-700 p-1"
+                className="text-red-500 hover:text-red-700 p-1 h-6 w-6"
               >
-                <X size={16} />
+                <X size={12} />
               </Button>
             </div>
           ))}
           {customHolidays.length === 0 && (
-            <p className="text-sm text-gray-500 text-center py-4">
+            <p className="text-xs text-gray-500 text-center py-2">
               등록된 회사 휴무일이 없습니다
             </p>
           )}
