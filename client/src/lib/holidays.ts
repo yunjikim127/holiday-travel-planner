@@ -94,6 +94,8 @@ export function getHolidayColor(countryCode: string): string {
     case 'KR': return 'korean-blue';
     case 'JP': return 'festival-amber';
     case 'TH': return 'vacation-green';
+    case 'VN': return 'red-500';
+    case 'US': return 'blue-500';
     default: return 'gray-500';
   }
 }

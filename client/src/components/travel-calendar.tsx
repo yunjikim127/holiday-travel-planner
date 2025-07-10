@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Calendar, AlertTriangle } from "lucide-react";
 import { SelectedDestination, Holiday, CustomHoliday } from "@shared/schema";
+import { getHolidayColor } from "@/lib/holidays";
 
 interface TravelCalendarProps {
   userId: number;
@@ -101,15 +102,11 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
     return holidays;
   };
 
-  const getHolidayColor = (type: string) => {
+  const getHolidayColorClass = (type: string) => {
     switch (type) {
       case 'korean': return 'bg-korean-blue';
-      case 'jp': return 'bg-festival-amber';
-      case 'th': return 'bg-vacation-green';
-      case 'vn': return 'bg-red-500';
-      case 'us': return 'bg-blue-500';
       case 'custom': return 'bg-purple-500';
-      default: return 'bg-gray-500';
+      default: return `bg-${getHolidayColor(type.toUpperCase())}`;
     }
   };
 
@@ -177,11 +174,7 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
           </div>
           {destinations.map(dest => (
             <div key={dest.countryCode} className="flex items-center">
-              <div className={`w-3 h-3 rounded mr-2 ${
-                dest.countryCode === 'JP' ? 'bg-festival-amber' :
-                dest.countryCode === 'TH' ? 'bg-vacation-green' :
-                'bg-gray-500'
-              }`}></div>
+              <div className={`w-3 h-3 rounded mr-2 bg-${getHolidayColor(dest.countryCode)}`}></div>
               <span>{dest.countryName} 공휴일</span>
             </div>
           ))}
@@ -228,14 +221,12 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
                   <div className="absolute bottom-1 left-1 right-1 space-y-1">
                     {holidays.slice(0, 2).map((holiday, idx) => (
                       <div key={idx} className="space-y-1">
-                        <div className={`h-1 ${getHolidayColor(holiday.type)} rounded`}></div>
+                        <div className={`h-1 ${getHolidayColorClass(holiday.type)} rounded`}></div>
                         {idx === 0 && (
                           <div className={`text-xs ${
                             holiday.type === 'korean' ? 'text-korean-blue' :
-                            holiday.type === 'jp' ? 'text-festival-amber' :
-                            holiday.type === 'th' ? 'text-vacation-green' :
                             holiday.type === 'custom' ? 'text-purple-500' :
-                            'text-gray-500'
+                            `text-${getHolidayColor(holiday.type.toUpperCase())}`
                           } truncate`}>
                             {holiday.name.length > 8 ? holiday.name.substring(0, 8) + '...' : holiday.name}
                           </div>
