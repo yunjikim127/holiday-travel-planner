@@ -89,11 +89,13 @@ export default function AnnualLeaveForm({ userId, user }: AnnualLeaveFormProps) 
           </p>
         </div>
         <Button
+          key="save-annual-leave"
+          id="save-annual-leave-btn"
           onClick={handleSave}
           disabled={updateUserMutation.isPending}
           className="w-full bg-green-600 hover:bg-green-700 text-white font-bold border-0"
         >
-          {updateUserMutation.isPending ? "저장 중..." : "저장"}
+          {updateUserMutation.isPending ? "저장 중..." : "💾 저장"}
         </Button>
       </CardContent>
     </Card>
