@@ -83,8 +83,8 @@ export default function AnnualLeaveForm({ userId, user }: AnnualLeaveFormProps) 
             className="w-full"
           />
         </div>
-        <div className="bg-vacation-green bg-opacity-10 p-3 rounded-md">
-          <p className="text-sm text-vacation-green font-medium">
+        <div className="bg-blue-50 border border-blue-200 p-3 rounded-md">
+          <p className="text-sm text-blue-700 font-medium">
             남은 연차: {remainingLeaves}일
           </p>
         </div>
