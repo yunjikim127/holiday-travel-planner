@@ -91,7 +91,7 @@ export default function AnnualLeaveForm({ userId, user }: AnnualLeaveFormProps) 
         <Button
           onClick={handleSave}
           disabled={updateUserMutation.isPending}
-          className="w-full"
+          className="w-full bg-vacation-green hover:bg-vacation-green/90 text-white font-medium"
         >
           {updateUserMutation.isPending ? "저장 중..." : "저장"}
         </Button>

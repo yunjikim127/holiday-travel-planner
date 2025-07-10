@@ -67,7 +67,7 @@ export default function VacationRecommendations({ userId, destinations }: Vacati
               )}
               <Button
                 size="sm"
-                className="text-xs bg-korean-blue text-white px-2 py-1 rounded hover:bg-blue-600"
+                className="text-xs bg-korean-blue hover:bg-korean-blue/90 text-white px-2 py-1 rounded font-medium"
               >
                 선택
               </Button>

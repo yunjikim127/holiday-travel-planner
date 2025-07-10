@@ -27,8 +27,8 @@ export default function CompactStatsBar({ user }: CompactStatsBarProps) {
             <span className="hidden md:inline">추석: 9월 16일-18일 (<strong>3일</strong>)</span>
           </div>
           <div className="flex items-center space-x-4 text-xs">
-            <span>연차 1일: <strong className="text-vacation-green">3개</strong> 황금연휴</span>
-            <span>연차 2일: <strong className="text-vacation-green">6개</strong> 황금연휴</span>
+            <span>연차 1일: <strong className="text-yellow-300">3개</strong> 황금연휴</span>
+            <span>연차 2일: <strong className="text-yellow-300">6개</strong> 황금연휴</span>
           </div>
         </div>
         

@@ -76,7 +76,12 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = ++this.currentUserId;
-    const user: User = { ...insertUser, id };
+    const user: User = { 
+      ...insertUser, 
+      id,
+      totalLeaves: insertUser.totalLeaves ?? 15,
+      usedLeaves: insertUser.usedLeaves ?? 0
+    };
     this.users.set(id, user);
     return user;
   }
@@ -85,7 +90,12 @@ export class MemStorage implements IStorage {
     const user = this.users.get(id);
     if (!user) throw new Error("User not found");
     
-    const updatedUser = { ...user, ...updates };
+    const updatedUser: User = { 
+      ...user, 
+      ...updates,
+      totalLeaves: updates.totalLeaves ?? user.totalLeaves,
+      usedLeaves: updates.usedLeaves ?? user.usedLeaves
+    };
     this.users.set(id, updatedUser);
     return updatedUser;
   }
@@ -130,7 +140,11 @@ export class MemStorage implements IStorage {
 
   async createVacationPlan(plan: InsertVacationPlan): Promise<VacationPlan> {
     const id = ++this.currentVacationPlanId;
-    const newPlan: VacationPlan = { ...plan, id };
+    const newPlan: VacationPlan = { 
+      ...plan, 
+      id,
+      destinations: plan.destinations as string[]
+    };
     this.vacationPlans.set(id, newPlan);
     return newPlan;
   }
@@ -139,7 +153,11 @@ export class MemStorage implements IStorage {
     const plan = this.vacationPlans.get(id);
     if (!plan) throw new Error("Vacation plan not found");
     
-    const updatedPlan = { ...plan, ...updates };
+    const updatedPlan: VacationPlan = { 
+      ...plan, 
+      ...updates,
+      destinations: (updates.destinations as string[]) ?? plan.destinations
+    };
     this.vacationPlans.set(id, updatedPlan);
     return updatedPlan;
   }
