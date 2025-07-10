@@ -106,6 +106,8 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
       case 'korean': return 'bg-korean-blue';
       case 'jp': return 'bg-festival-amber';
       case 'th': return 'bg-vacation-green';
+      case 'vn': return 'bg-red-500';
+      case 'us': return 'bg-blue-500';
       case 'custom': return 'bg-purple-500';
       default: return 'bg-gray-500';
     }

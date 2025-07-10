@@ -236,10 +236,45 @@ export class MemStorage implements IStorage {
       { date: "2024-12-31", name: "วันสิ้นปี", type: "public", country: "Thailand", countryCode: "TH" },
     ];
 
+    // Vietnamese holidays for 2024
+    const vietnameseHolidays: Holiday[] = [
+      { date: "2024-01-01", name: "Tết Dương lịch", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-02-08", name: "Tết Nguyên Đán", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-02-09", name: "Tết Nguyên Đán", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-02-10", name: "Tết Nguyên Đán", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-02-11", name: "Tết Nguyên Đán", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-02-12", name: "Tết Nguyên Đán", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-02-13", name: "Tết Nguyên Đán", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-02-14", name: "Tết Nguyên Đán", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-04-18", name: "Giỗ Tổ Hùng Vương", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-04-30", name: "Ngày Giải phóng", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-05-01", name: "Quốc tế Lao động", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-05-22", name: "Phật Đản", type: "religious", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-09-02", name: "Quốc khánh", type: "public", country: "Vietnam", countryCode: "VN" },
+      { date: "2024-09-03", name: "Quốc khánh", type: "public", country: "Vietnam", countryCode: "VN" },
+    ];
+
+    // US holidays for 2024
+    const usHolidays: Holiday[] = [
+      { date: "2024-01-01", name: "New Year's Day", type: "public", country: "United States", countryCode: "US" },
+      { date: "2024-01-15", name: "Martin Luther King Jr. Day", type: "public", country: "United States", countryCode: "US" },
+      { date: "2024-02-19", name: "Presidents Day", type: "public", country: "United States", countryCode: "US" },
+      { date: "2024-05-27", name: "Memorial Day", type: "public", country: "United States", countryCode: "US" },
+      { date: "2024-06-19", name: "Juneteenth", type: "public", country: "United States", countryCode: "US" },
+      { date: "2024-07-04", name: "Independence Day", type: "public", country: "United States", countryCode: "US" },
+      { date: "2024-09-02", name: "Labor Day", type: "public", country: "United States", countryCode: "US" },
+      { date: "2024-10-14", name: "Columbus Day", type: "public", country: "United States", countryCode: "US" },
+      { date: "2024-11-11", name: "Veterans Day", type: "public", country: "United States", countryCode: "US" },
+      { date: "2024-11-28", name: "Thanksgiving", type: "public", country: "United States", countryCode: "US" },
+      { date: "2024-12-25", name: "Christmas Day", type: "public", country: "United States", countryCode: "US" },
+    ];
+
     const holidayMap: { [key: string]: Holiday[] } = {
       'KR': koreanHolidays,
       'JP': japaneseHolidays,
       'TH': thaiHolidays,
+      'VN': vietnameseHolidays,
+      'US': usHolidays,
     };
 
     return holidayMap[countryCode] || [];
