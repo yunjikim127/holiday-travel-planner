@@ -111,8 +111,42 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
     },
   });
 
+  const deleteVacationPlanMutation = useMutation({
+    mutationFn: async (planId: number) => {
+      return apiRequest('DELETE', `/api/vacation-plans/${planId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/user', userId, 'vacation-plans'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/user', userId] });
+      toast({
+        title: "휴가 계획이 삭제되었습니다",
+        description: "선택한 휴가 계획이 삭제되었습니다.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "오류가 발생했습니다",
+        description: "휴가 계획 삭제에 실패했습니다.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleMouseDown = (date: Date) => {
     if (isWeekend(date) || getHolidaysForDate(date).length > 0) return;
+    
+    // 이미 휴가 계획이 있는 날짜인지 확인
+    const existingPlan = vacationPlans.find(plan => {
+      const startDate = new Date(plan.startDate);
+      const endDate = new Date(plan.endDate);
+      return date >= startDate && date <= endDate;
+    });
+    
+    if (existingPlan) {
+      // 기존 휴가 계획 삭제
+      deleteVacationPlanMutation.mutate(existingPlan.id!);
+      return;
+    }
     
     setIsDragging(true);
     setDragStartDate(date);
@@ -133,7 +167,9 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
       
       const vacationPlan: InsertVacationPlan = {
         userId,
-        title: `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()})`,
+        title: selectedDates.length === 1 
+          ? `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()})`
+          : `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()} ~ ${endDate.getMonth() + 1}/${endDate.getDate()})`,
         startDate: startDate.toISOString().split('T')[0],
         endDate: endDate.toISOString().split('T')[0],
         leaveDaysUsed: selectedDates.length,
@@ -317,7 +353,7 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
           </div>
         </div>
         <div className="mt-2 text-xs text-gray-600">
-          💡 평일을 드래그하여 휴가 계획을 추가할 수 있습니다.
+          💡 평일을 드래그하여 휴가 계획을 추가하거나, 기존 휴가 계획을 클릭하여 삭제할 수 있습니다.
         </div>
       </div>
 
