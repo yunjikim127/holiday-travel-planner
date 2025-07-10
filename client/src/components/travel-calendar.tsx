@@ -377,61 +377,38 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
     "7월", "8월", "9월", "10월", "11월", "12월"
   ];
 
-  return (
-    <Card>
-      {/* Calendar Header */}
-      <CardHeader className="flex flex-row justify-between items-center p-6 border-b">
-        <div className="flex flex-col space-y-2">
-          <h2 className="text-xl font-semibold">
-            {currentYear}년 {monthNames[currentMonth]}
-          </h2>
-          <div className="text-sm text-gray-600">
-            총 사용 연차 일 수: <span className="font-medium text-red-600">{totalUsed}일</span> / 
-            잔여 연차 일 수: <span className="font-medium text-blue-600">{remaining}일</span>
-          </div>
-        </div>
-        <div className="flex space-x-2">
-          <Button variant="ghost" size="sm" onClick={() => navigateMonth('prev')}>
-            <ChevronLeft size={16} />
-          </Button>
-          <Button variant="ghost" size="sm" onClick={() => navigateMonth('next')}>
-            <ChevronRight size={16} />
-          </Button>
-        </div>
-      </CardHeader>
+  // 현재 월과 다음 월 생성
+  const currentMonthDays = getDaysInMonth(currentDate);
+  const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+  const nextMonthDays = getDaysInMonth(nextMonth);
 
-      {/* Legend */}
-      <div className="px-6 py-3 bg-gray-50 border-b">
-        <div className="flex flex-wrap gap-4 text-xs">
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-korean-blue rounded mr-2"></div>
-            <span>한국 공휴일</span>
-          </div>
-          {destinations.map(dest => (
-            <div key={dest.countryCode} className="flex items-center">
-              <div className={`w-3 h-3 rounded mr-2 bg-${getHolidayColor(dest.countryCode)}`}></div>
-              <span>{dest.countryName} 공휴일</span>
+  const renderMonth = (date: Date, days: any[], monthIndex: number) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    
+    return (
+      <div key={monthIndex} className="flex-1">
+        {/* Month Header */}
+        <div className="flex justify-between items-center p-3 border-b">
+          <h3 className="text-base font-medium">
+            {year}년 {monthNames[month]}
+          </h3>
+          {monthIndex === 0 && (
+            <div className="flex space-x-1">
+              <Button variant="ghost" size="sm" onClick={() => navigateMonth('prev')} className="h-6 w-6 p-0">
+                <ChevronLeft size={12} />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => navigateMonth('next')} className="h-6 w-6 p-0">
+                <ChevronRight size={12} />
+              </Button>
             </div>
-          ))}
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-purple-500 rounded mr-2"></div>
-            <span>회사 휴무일</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-green-500 rounded mr-2"></div>
-            <span>휴가 계획</span>
-          </div>
+          )}
         </div>
-        <div className="mt-2 text-xs text-gray-600">
-          💡 평일을 드래그하여 휴가 계획을 추가하거나, 기존 휴가 계획을 클릭하여 삭제할 수 있습니다.
-        </div>
-      </div>
 
-      <CardContent className="p-6">
-        {/* Calendar Header Days */}
-        <div className="grid grid-cols-7 gap-1 mb-4">
+        {/* Days Header */}
+        <div className="grid grid-cols-7 gap-px">
           {["일", "월", "화", "수", "목", "금", "토"].map((day, index) => (
-            <div key={day} className={`text-center text-sm font-medium py-2 ${
+            <div key={day} className={`text-center text-xs font-medium py-1 ${
               index === 0 ? 'text-red-500' : index === 6 ? 'text-blue-500' : 'text-gray-700'
             }`}>
               {day}
@@ -439,8 +416,8 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
           ))}
         </div>
 
-        {/* Calendar Days Grid */}
-        <div className="grid grid-cols-7 gap-1" onMouseUp={handleMouseUp}>
+        {/* Days Grid */}
+        <div className="grid grid-cols-7 gap-px" onMouseUp={handleMouseUp}>
           {days.map((day, index) => {
             const holidays = getHolidaysForDate(day.date);
             const isWeekendDay = isWeekend(day.date);
@@ -451,76 +428,89 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
             return (
               <div
                 key={index}
-                className={`h-20 p-1 text-center border border-gray-100 relative cursor-pointer select-none ${
-                  !day.isCurrentMonth ? 'opacity-50' : ''
+                className={`h-12 p-1 text-center border border-gray-100 relative cursor-pointer select-none ${
+                  !day.isCurrentMonth ? 'opacity-30' : ''
                 } ${
                   dayOfWeek === 0 ? 'text-red-500' : dayOfWeek === 6 ? 'text-blue-500' : ''
                 } ${
                   isSelected ? 'bg-blue-200 border-blue-400' : 
                   isVacation ? 'bg-green-100 border-green-300' :
-                  isWeekendDay || holidays.length > 0 ? 'bg-gray-100' : 'hover:bg-gray-50'
+                  holidays.length > 0 ? 'bg-gray-100' : 'hover:bg-gray-50'
                 }`}
                 onMouseDown={() => day.isCurrentMonth && handleMouseDown(day.date)}
                 onMouseEnter={() => day.isCurrentMonth && handleMouseEnter(day.date)}
               >
-                <span className={`${day.isCurrentMonth ? 'font-medium' : 'text-gray-400'} text-sm`}>
-                  {day.date.getDate()}
-                </span>
-                
-                {isVacation && (
-                  <div className="absolute top-1 right-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  </div>
-                )}
-                
+                <div className="text-xs font-medium">{day.date.getDate()}</div>
                 {holidays.length > 0 && (
-                  <div className="absolute bottom-1 left-1 right-1 space-y-1">
-                    {holidays.slice(0, 2).map((holiday, idx) => (
-                      <div key={idx} className="space-y-1">
-                        <div className={`h-1 ${getHolidayColorClass(holiday.type)} rounded`}></div>
-                        {idx === 0 && (
-                          <div className={`text-xs ${
-                            holiday.type === 'korean' ? 'text-korean-blue' :
-                            holiday.type === 'custom' ? 'text-purple-500' :
-                            `text-${getHolidayColor(holiday.type.toUpperCase())}`
-                          } truncate`}>
-                            {holiday.name.length > 8 ? holiday.name.substring(0, 8) + '...' : holiday.name}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                    {holidays.length > 2 && (
-                      <div className="text-xs text-gray-500">+{holidays.length - 2}</div>
-                    )}
+                  <div className="absolute bottom-0 left-0 right-0 flex justify-center">
+                    <div className="flex space-x-px">
+                      {holidays.slice(0, 2).map((holiday, holidayIndex) => (
+                        <div
+                          key={holidayIndex}
+                          className={`w-1 h-1 rounded-full ${getHolidayColorClass(holiday.type)}`}
+                          title={`${holiday.name} (${holiday.country})`}
+                        />
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
             );
           })}
         </div>
-      </CardContent>
+      </div>
+    );
+  };
 
-      {/* Calendar Footer with Insights */}
-      <div className="px-6 py-4 bg-gray-50 border-t">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white p-4 rounded-lg">
-            <h4 className="font-medium text-sm mb-2 flex items-center">
-              <Calendar className="text-korean-blue mr-2" size={16} />
-              이번 달 여행 최적기
-            </h4>
-            <p className="text-sm text-gray-600">5월 4일-7일 어린이날 연휴 추천</p>
-            <p className="text-xs text-gray-500 mt-1">연차 1일로 4일 연휴 가능</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg">
-            <h4 className="font-medium text-sm mb-2 flex items-center">
-              <AlertTriangle className="text-red-500 mr-2" size={16} />
-              주의사항
-            </h4>
-            <p className="text-sm text-gray-600">일본 골든위크 기간</p>
-            <p className="text-xs text-gray-500 mt-1">숙박비 상승, 조기 예약 필수</p>
+  return (
+    <Card>
+      {/* Main Header */}
+      <CardHeader className="flex flex-row justify-between items-center p-4 border-b">
+        <div className="flex flex-col space-y-1">
+          <h2 className="text-lg font-semibold">
+            2025년 대한민국 총 공휴일: 16일
+          </h2>
+          <div className="text-xs text-gray-600">
+            사용 연차: <span className="font-medium text-red-600">{totalUsed}일</span> / 
+            잔여 연차: <span className="font-medium text-blue-600">{remaining}일</span>
           </div>
         </div>
+      </CardHeader>
+
+      {/* Legend */}
+      <div className="px-4 py-2 bg-gray-50 border-b">
+        <div className="flex flex-wrap gap-3 text-xs">
+          <div className="flex items-center">
+            <div className="w-2 h-2 bg-korean-blue rounded mr-1"></div>
+            <span>한국 공휴일</span>
+          </div>
+          {destinations.map(dest => (
+            <div key={dest.countryCode} className="flex items-center">
+              <div className={`w-2 h-2 rounded mr-1 bg-${getHolidayColor(dest.countryCode)}`}></div>
+              <span>{dest.countryName}</span>
+            </div>
+          ))}
+          <div className="flex items-center">
+            <div className="w-2 h-2 bg-purple-500 rounded mr-1"></div>
+            <span>회사 휴무일</span>
+          </div>
+          <div className="flex items-center">
+            <div className="w-2 h-2 bg-green-500 rounded mr-1"></div>
+            <span>휴가 계획</span>
+          </div>
+        </div>
+        <div className="mt-1 text-xs text-gray-500">
+          💡 평일을 드래그하여 휴가 계획을 추가하거나, 기존 휴가 계획을 클릭하여 삭제할 수 있습니다.
+        </div>
       </div>
+
+      <CardContent className="p-4">
+        {/* Two Month Calendar Display */}
+        <div className="flex space-x-4">
+          {renderMonth(currentDate, currentMonthDays, 0)}
+          {renderMonth(nextMonth, nextMonthDays, 1)}
+        </div>
+      </CardContent>
     </Card>
   );
 }
