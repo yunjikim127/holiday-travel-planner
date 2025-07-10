@@ -439,18 +439,37 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
                 }`}
                 onMouseDown={() => day.isCurrentMonth && handleMouseDown(day.date)}
                 onMouseEnter={() => day.isCurrentMonth && handleMouseEnter(day.date)}
+                title={(() => {
+                  const tooltipItems = [];
+                  if (holidays.length > 0) {
+                    tooltipItems.push(...holidays.map(h => `${h.name} (${h.country})`));
+                  }
+                  if (isVacation) {
+                    const vacationPlan = vacationPlans.find(plan => {
+                      const startDate = new Date(plan.startDate);
+                      const endDate = new Date(plan.endDate);
+                      return day.date >= startDate && day.date <= endDate;
+                    });
+                    if (vacationPlan) {
+                      tooltipItems.push(`휴가 계획: ${vacationPlan.title}`);
+                    }
+                  }
+                  return tooltipItems.join('\n');
+                })()}
               >
                 <div className="text-xs font-medium">{day.date.getDate()}</div>
                 {holidays.length > 0 && (
                   <div className="absolute bottom-0 left-0 right-0 flex justify-center">
                     <div className="flex space-x-px">
-                      {holidays.slice(0, 2).map((holiday, holidayIndex) => (
+                      {holidays.slice(0, 3).map((holiday, holidayIndex) => (
                         <div
                           key={holidayIndex}
                           className={`w-1 h-1 rounded-full ${getHolidayColorClass(holiday.type)}`}
-                          title={`${holiday.name} (${holiday.country})`}
                         />
                       ))}
+                      {holidays.length > 3 && (
+                        <div className="w-1 h-1 rounded-full bg-gray-400" />
+                      )}
                     </div>
                   </div>
                 )}
