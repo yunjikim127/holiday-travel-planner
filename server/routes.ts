@@ -120,6 +120,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete("/api/vacation-plans/:id", async (req, res) => {
+    try {
+      await storage.deleteVacationPlan(parseInt(req.params.id));
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete vacation plan" });
+    }
+  });
+
   // External data routes
   app.get("/api/holidays/:countryCode/:year", async (req, res) => {
     try {

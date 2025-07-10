@@ -4,6 +4,7 @@ import AnnualLeaveForm from "@/components/annual-leave-form";
 import CustomHolidaysForm from "@/components/custom-holidays-form";
 import DestinationSelector from "@/components/destination-selector";
 import VacationRecommendations from "@/components/vacation-recommendations";
+import VacationPlans from "@/components/vacation-plans";
 import TravelCalendar from "@/components/travel-calendar";
 import TravelInsights from "@/components/travel-insights";
 import { Bell, UserCircle } from "lucide-react";
@@ -27,7 +28,7 @@ export default function TravelPlanner() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <h1 className="text-xl font-bold text-gray-900">🇰🇷 한국 공휴일 여행 플래너</h1>
-              <span className="bg-korean-blue text-white px-2 py-1 rounded text-xs font-medium">2024</span>
+              <span className="bg-korean-blue text-white px-2 py-1 rounded text-xs font-medium">2025</span>
             </div>
             <div className="flex items-center space-x-4">
               <button className="text-gray-500 hover:text-gray-700">
@@ -53,6 +54,7 @@ export default function TravelPlanner() {
             <CustomHolidaysForm userId={CURRENT_USER_ID} />
             <DestinationSelector userId={CURRENT_USER_ID} />
             <VacationRecommendations userId={CURRENT_USER_ID} destinations={destinations} />
+            <VacationPlans userId={CURRENT_USER_ID} />
           </div>
 
           {/* Main Calendar */}
