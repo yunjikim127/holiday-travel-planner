@@ -101,6 +101,11 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
         title: "휴가 계획이 추가되었습니다",
         description: "선택한 날짜에 휴가 계획이 추가되었습니다.",
       });
+      
+      // 연속된 계획이 있는지 확인하고 병합
+      setTimeout(() => {
+        mergeConsecutivePlans();
+      }, 500);
     },
     onError: () => {
       toast({
@@ -183,6 +188,71 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
     setIsDragging(false);
     setDragStartDate(null);
     setSelectedDates([]);
+  };
+
+  const mergeConsecutivePlans = () => {
+    const sortedPlans = [...vacationPlans].sort((a, b) => 
+      new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+    );
+    
+    const mergedGroups: VacationPlan[][] = [];
+    let currentGroup: VacationPlan[] = [];
+    
+    for (const plan of sortedPlans) {
+      if (currentGroup.length === 0) {
+        currentGroup.push(plan);
+      } else {
+        const lastPlan = currentGroup[currentGroup.length - 1];
+        const lastEndDate = new Date(lastPlan.endDate);
+        const currentStartDate = new Date(plan.startDate);
+        
+        // 연속된 날짜인지 확인 (하루 차이)
+        const dayDiff = Math.ceil((currentStartDate.getTime() - lastEndDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (dayDiff <= 1) {
+          currentGroup.push(plan);
+        } else {
+          if (currentGroup.length > 1) {
+            mergedGroups.push(currentGroup);
+          }
+          currentGroup = [plan];
+        }
+      }
+    }
+    
+    if (currentGroup.length > 1) {
+      mergedGroups.push(currentGroup);
+    }
+    
+    // 병합 필요한 그룹들을 처리
+    mergedGroups.forEach(group => {
+      const firstPlan = group[0];
+      const lastPlan = group[group.length - 1];
+      const totalLeaveDays = group.reduce((sum, p) => sum + p.leaveDaysUsed, 0);
+      
+      // 새로운 병합된 계획 생성
+      const mergedPlan: InsertVacationPlan = {
+        userId,
+        title: `휴가 계획 (${new Date(firstPlan.startDate).getMonth() + 1}/${new Date(firstPlan.startDate).getDate()} ~ ${new Date(lastPlan.endDate).getMonth() + 1}/${new Date(lastPlan.endDate).getDate()})`,
+        startDate: firstPlan.startDate,
+        endDate: lastPlan.endDate,
+        leaveDaysUsed: totalLeaveDays,
+        destinations: destinations.map(d => d.countryCode),
+        notes: "연속된 휴가 계획 병합",
+      };
+      
+      // 기존 개별 계획들 삭제
+      group.forEach(plan => {
+        if (plan.id) {
+          deleteVacationPlanMutation.mutate(plan.id);
+        }
+      });
+      
+      // 새로운 병합된 계획 생성
+      setTimeout(() => {
+        createVacationPlanMutation.mutate(mergedPlan);
+      }, 100);
+    });
   };
 
   const getDatesBetween = (startDate: Date, endDate: Date): Date[] => {
