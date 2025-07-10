@@ -15,7 +15,6 @@ interface AnnualLeaveFormProps {
 }
 
 export default function AnnualLeaveForm({ userId, user }: AnnualLeaveFormProps) {
-  console.log('AnnualLeaveForm rendered', { userId, user });
   const [totalLeaves, setTotalLeaves] = useState(user?.totalLeaves || 15);
   const [usedLeaves, setUsedLeaves] = useState(user?.usedLeaves || 0);
   const { toast } = useToast();
@@ -89,23 +88,13 @@ export default function AnnualLeaveForm({ userId, user }: AnnualLeaveFormProps) 
             남은 연차: {remainingLeaves}일
           </p>
         </div>
-        <div className="bg-purple-200 p-4 rounded-lg border-4 border-purple-600">
-          <p className="text-purple-800 font-bold mb-2">DEBUG: 이 영역에 버튼이 1개만 있어야 함</p>
-          <button
-            key="save-annual-leave"
-            id="save-annual-leave-btn"
-            onClick={handleSave}
-            disabled={updateUserMutation.isPending}
-            className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold border-4 border-blue-400 rounded-md px-4 py-2 transition-colors disabled:opacity-50"
-            style={{ 
-              position: 'relative', 
-              zIndex: 10,
-              boxShadow: '0 0 20px rgba(255, 0, 0, 0.8)'
-            }}
-          >
-            {updateUserMutation.isPending ? "저장 중..." : "🔥 유일한 저장 버튼"}
-          </button>
-        </div>
+        <button
+          onClick={handleSave}
+          disabled={updateUserMutation.isPending}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold rounded-md px-4 py-2 transition-colors disabled:opacity-50"
+        >
+          {updateUserMutation.isPending ? "저장 중..." : "💾 저장"}
+        </button>
       </CardContent>
     </Card>
   );
