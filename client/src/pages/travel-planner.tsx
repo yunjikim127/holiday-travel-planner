@@ -52,13 +52,19 @@ export default function TravelPlanner() {
           <div className="lg:col-span-1 space-y-6">
             <AnnualLeaveForm userId={CURRENT_USER_ID} user={user} />
             <CustomHolidaysForm userId={CURRENT_USER_ID} />
+            
+            {/* Main Calendar - moved after company holidays */}
+            <div className="lg:hidden">
+              <TravelCalendar userId={CURRENT_USER_ID} destinations={destinations} />
+            </div>
+            
             <DestinationSelector userId={CURRENT_USER_ID} />
             <VacationRecommendations userId={CURRENT_USER_ID} destinations={destinations} />
             <VacationPlans userId={CURRENT_USER_ID} />
           </div>
 
-          {/* Main Calendar */}
-          <div className="lg:col-span-2">
+          {/* Main Calendar - Desktop */}
+          <div className="hidden lg:block lg:col-span-2">
             <TravelCalendar userId={CURRENT_USER_ID} destinations={destinations} />
             <TravelInsights destinations={destinations} />
           </div>

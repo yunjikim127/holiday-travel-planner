@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Calendar, AlertTriangle } from "lucide-react";
-import { SelectedDestination, Holiday, CustomHoliday } from "@shared/schema";
+import { SelectedDestination, Holiday, CustomHoliday, VacationPlan, InsertVacationPlan, User } from "@shared/schema";
 import { getHolidayColor } from "@/lib/holidays";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface TravelCalendarProps {
   userId: number;
@@ -13,8 +15,13 @@ interface TravelCalendarProps {
 
 export default function TravelCalendar({ userId, destinations }: TravelCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date(2025, 6, 1)); // July 2025
+  const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartDate, setDragStartDate] = useState<Date | null>(null);
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { data: koreanHolidays = [] } = useQuery<Holiday[]>({
     queryKey: ["/api/holidays", "KR", currentYear],
@@ -22,6 +29,14 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
 
   const { data: customHolidays = [] } = useQuery<CustomHoliday[]>({
     queryKey: ["/api/user", userId, "custom-holidays"],
+  });
+
+  const { data: vacationPlans = [] } = useQuery<VacationPlan[]>({
+    queryKey: ["/api/user", userId, "vacation-plans"],
+  });
+
+  const { data: user } = useQuery<User>({
+    queryKey: ["/api/user", userId],
   });
 
   // Get holidays for selected destinations with fixed queries
@@ -74,6 +89,114 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
     }
     setCurrentDate(newDate);
   };
+
+  const createVacationPlanMutation = useMutation({
+    mutationFn: async (plan: InsertVacationPlan) => {
+      return apiRequest('POST', '/api/vacation-plans', plan);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/user', userId, 'vacation-plans'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/user', userId] });
+      toast({
+        title: "휴가 계획이 추가되었습니다",
+        description: "선택한 날짜에 휴가 계획이 추가되었습니다.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "오류가 발생했습니다",
+        description: "휴가 계획 추가에 실패했습니다.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleMouseDown = (date: Date) => {
+    if (isWeekend(date) || getHolidaysForDate(date).length > 0) return;
+    
+    setIsDragging(true);
+    setDragStartDate(date);
+    setSelectedDates([date]);
+  };
+
+  const handleMouseEnter = (date: Date) => {
+    if (!isDragging || !dragStartDate || isWeekend(date) || getHolidaysForDate(date).length > 0) return;
+    
+    const dates = getDatesBetween(dragStartDate, date);
+    setSelectedDates(dates);
+  };
+
+  const handleMouseUp = () => {
+    if (isDragging && selectedDates.length > 0) {
+      const startDate = new Date(Math.min(...selectedDates.map(d => d.getTime())));
+      const endDate = new Date(Math.max(...selectedDates.map(d => d.getTime())));
+      
+      const vacationPlan: InsertVacationPlan = {
+        userId,
+        title: `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()})`,
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+        leaveDaysUsed: selectedDates.length,
+        destinations: destinations.map(d => d.countryCode),
+        notes: "캘린더에서 직접 추가한 휴가",
+      };
+      
+      createVacationPlanMutation.mutate(vacationPlan);
+    }
+    
+    setIsDragging(false);
+    setDragStartDate(null);
+    setSelectedDates([]);
+  };
+
+  const getDatesBetween = (startDate: Date, endDate: Date): Date[] => {
+    const dates: Date[] = [];
+    const currentDate = new Date(startDate);
+    const end = new Date(endDate);
+    
+    if (currentDate > end) {
+      [currentDate.setTime(end.getTime()), end.setTime(startDate.getTime())];
+    }
+    
+    while (currentDate <= end) {
+      if (!isWeekend(currentDate) && getHolidaysForDate(currentDate).length === 0) {
+        dates.push(new Date(currentDate));
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    return dates;
+  };
+
+  const isWeekend = (date: Date): boolean => {
+    const day = date.getDay();
+    return day === 0 || day === 6;
+  };
+
+  const isVacationDay = (date: Date): boolean => {
+    const dateStr = date.toISOString().split('T')[0];
+    return vacationPlans.some(plan => {
+      const startDate = new Date(plan.startDate);
+      const endDate = new Date(plan.endDate);
+      const checkDate = new Date(dateStr);
+      return checkDate >= startDate && checkDate <= endDate;
+    });
+  };
+
+  const isSelectedDate = (date: Date): boolean => {
+    return selectedDates.some(selectedDate => 
+      selectedDate.toDateString() === date.toDateString()
+    );
+  };
+
+  const calculateLeaveStats = () => {
+    const totalUsed = vacationPlans.reduce((sum, plan) => sum + plan.leaveDaysUsed, 0);
+    const totalLeaves = user?.totalLeaves || 15;
+    const remaining = totalLeaves - totalUsed;
+    return { totalUsed, remaining, totalLeaves };
+  };
+
+  const { totalUsed, remaining, totalLeaves } = calculateLeaveStats();
 
   const getHolidaysForDate = (date: Date) => {
     const dateStr = date.toISOString().split('T')[0];
@@ -152,9 +275,15 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
     <Card>
       {/* Calendar Header */}
       <CardHeader className="flex flex-row justify-between items-center p-6 border-b">
-        <h2 className="text-xl font-semibold">
-          {currentYear}년 {monthNames[currentMonth]}
-        </h2>
+        <div className="flex flex-col space-y-2">
+          <h2 className="text-xl font-semibold">
+            {currentYear}년 {monthNames[currentMonth]}
+          </h2>
+          <div className="text-sm text-gray-600">
+            총 사용 연차 일 수: <span className="font-medium text-red-600">{totalUsed}일</span> / 
+            잔여 연차 일 수: <span className="font-medium text-blue-600">{remaining}일</span>
+          </div>
+        </div>
         <div className="flex space-x-2">
           <Button variant="ghost" size="sm" onClick={() => navigateMonth('prev')}>
             <ChevronLeft size={16} />
@@ -182,6 +311,13 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
             <div className="w-3 h-3 bg-purple-500 rounded mr-2"></div>
             <span>회사 휴무일</span>
           </div>
+          <div className="flex items-center">
+            <div className="w-3 h-3 bg-green-500 rounded mr-2"></div>
+            <span>휴가 계획</span>
+          </div>
+        </div>
+        <div className="mt-2 text-xs text-gray-600">
+          💡 평일을 드래그하여 휴가 계획을 추가할 수 있습니다.
         </div>
       </div>
 
@@ -198,24 +334,38 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
         </div>
 
         {/* Calendar Days Grid */}
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-1" onMouseUp={handleMouseUp}>
           {days.map((day, index) => {
             const holidays = getHolidaysForDate(day.date);
-            const isWeekend = day.date.getDay() === 0 || day.date.getDay() === 6;
+            const isWeekendDay = isWeekend(day.date);
             const dayOfWeek = day.date.getDay();
+            const isVacation = isVacationDay(day.date);
+            const isSelected = isSelectedDate(day.date);
 
             return (
               <div
                 key={index}
-                className={`h-20 p-1 text-center border border-gray-100 relative cursor-pointer hover:bg-gray-50 ${
+                className={`h-20 p-1 text-center border border-gray-100 relative cursor-pointer select-none ${
                   !day.isCurrentMonth ? 'opacity-50' : ''
                 } ${
                   dayOfWeek === 0 ? 'text-red-500' : dayOfWeek === 6 ? 'text-blue-500' : ''
+                } ${
+                  isSelected ? 'bg-blue-200 border-blue-400' : 
+                  isVacation ? 'bg-green-100 border-green-300' :
+                  isWeekendDay || holidays.length > 0 ? 'bg-gray-100' : 'hover:bg-gray-50'
                 }`}
+                onMouseDown={() => day.isCurrentMonth && handleMouseDown(day.date)}
+                onMouseEnter={() => day.isCurrentMonth && handleMouseEnter(day.date)}
               >
                 <span className={`${day.isCurrentMonth ? 'font-medium' : 'text-gray-400'} text-sm`}>
                   {day.date.getDate()}
                 </span>
+                
+                {isVacation && (
+                  <div className="absolute top-1 right-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  </div>
+                )}
                 
                 {holidays.length > 0 && (
                   <div className="absolute bottom-1 left-1 right-1 space-y-1">
