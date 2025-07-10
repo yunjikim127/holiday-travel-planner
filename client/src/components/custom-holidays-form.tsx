@@ -111,7 +111,7 @@ export default function CustomHolidaysForm({ userId }: CustomHolidaysFormProps) 
           <Button
             onClick={handleAdd}
             disabled={addHolidayMutation.isPending}
-            className="w-full bg-korean-blue hover:bg-korean-blue/90 text-white font-medium"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold border-0"
           >
             <PlusCircle size={16} className="mr-2" />
             {addHolidayMutation.isPending ? "추가 중..." : "추가"}

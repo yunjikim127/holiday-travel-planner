@@ -143,7 +143,8 @@ export class MemStorage implements IStorage {
     const newPlan: VacationPlan = { 
       ...plan, 
       id,
-      destinations: plan.destinations as string[]
+      destinations: plan.destinations as string[],
+      isSelected: plan.isSelected ?? false
     };
     this.vacationPlans.set(id, newPlan);
     return newPlan;

@@ -112,10 +112,10 @@ export default function DestinationSelector({ userId }: DestinationSelectorProps
                 size="sm"
                 onClick={() => handleAddDestination(country.code, country.nameKr)}
                 disabled={isCountrySelected(country.code) || addDestinationMutation.isPending}
-                className={`p-2 text-sm transition-colors ${
+                className={`p-2 text-sm transition-colors font-bold border-0 ${
                   isCountrySelected(country.code)
-                    ? 'bg-korean-blue text-white'
-                    : 'hover:bg-korean-blue hover:text-white'
+                    ? 'bg-blue-700 text-white'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white'
                 }`}
               >
                 {country.emoji} {country.nameKr}
@@ -146,7 +146,11 @@ export default function DestinationSelector({ userId }: DestinationSelectorProps
                 size="sm"
                 onClick={() => handleAddDestination(country.code, country.nameKr)}
                 disabled={isCountrySelected(country.code) || addDestinationMutation.isPending}
-                className="w-full justify-start text-sm"
+                className={`w-full justify-start text-sm font-bold border-0 ${
+                  isCountrySelected(country.code)
+                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                }`}
               >
                 {country.emoji} {country.nameKr} ({country.name})
               </Button>
@@ -178,7 +182,7 @@ export default function DestinationSelector({ userId }: DestinationSelectorProps
                   size="sm"
                   onClick={() => handleRemoveDestination(destination.countryCode)}
                   disabled={removeDestinationMutation.isPending}
-                  className="text-red-500 hover:text-red-700 p-1"
+                  className="bg-red-600 hover:bg-red-700 text-white p-1 font-bold border-0"
                 >
                   <X size={16} />
                 </Button>
