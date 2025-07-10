@@ -12,7 +12,7 @@ interface TravelCalendarProps {
 }
 
 export default function TravelCalendar({ userId, destinations }: TravelCalendarProps) {
-  const [currentDate, setCurrentDate] = useState(new Date(2024, 4, 1)); // May 2024
+  const [currentDate, setCurrentDate] = useState(new Date(2025, 6, 1)); // July 2025
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
 

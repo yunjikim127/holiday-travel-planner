@@ -8,8 +8,8 @@ interface TravelInsightsProps {
 }
 
 export default function TravelInsights({ destinations }: TravelInsightsProps) {
-  const currentMonth = 5; // May
-  const currentYear = 2024;
+  const currentMonth = 7; // July
+  const currentYear = 2025;
 
   // Fixed queries for travel insights
   const usInsights = useQuery<TravelInsight>({
