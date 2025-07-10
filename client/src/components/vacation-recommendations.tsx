@@ -1,7 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Lightbulb } from "lucide-react";
-import { SelectedDestination } from "@shared/schema";
+import { SelectedDestination, InsertVacationPlan } from "@shared/schema";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface VacationRecommendationsProps {
   userId: number;
@@ -9,6 +12,9 @@ interface VacationRecommendationsProps {
 }
 
 export default function VacationRecommendations({ userId, destinations }: VacationRecommendationsProps) {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
   // Mock recommendations based on Korean holidays and destinations
   const recommendations = [
     {
@@ -17,6 +23,8 @@ export default function VacationRecommendations({ userId, destinations }: Vacati
       period: "5월 4일(토) ~ 5월 7일(화)",
       duration: "4일 연휴",
       leaveDays: 1,
+      startDate: "2025-05-04",
+      endDate: "2025-05-07",
       warning: destinations.find(d => d.countryCode === 'JP') ? "일본 골든위크와 겹침 주의" : null,
     },
     {
@@ -25,17 +33,59 @@ export default function VacationRecommendations({ userId, destinations }: Vacati
       period: "10월 7일(월) ~ 10월 11일(금)",
       duration: "5일 연휴",
       leaveDays: 2,
+      startDate: "2025-10-07",
+      endDate: "2025-10-11",
       warning: destinations.find(d => d.countryCode === 'TH') ? "태국 성수기 시작" : null,
     },
     {
       id: 3,
       name: "추석 연휴 확장",
-      period: "9월 14일(토) ~ 9월 18일(수)",
-      duration: "5일 연휴",
-      leaveDays: 1,
+      period: "10월 5일(일) ~ 10월 10일(금)",
+      duration: "6일 연휴",
+      leaveDays: 2,
+      startDate: "2025-10-05",
+      endDate: "2025-10-10",
       warning: null,
     },
   ];
+
+  const createVacationPlanMutation = useMutation({
+    mutationFn: async (plan: InsertVacationPlan) => {
+      return apiRequest('/api/vacation-plans', {
+        method: 'POST',
+        body: JSON.stringify(plan),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/user', userId, 'vacation-plans'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/user', userId] });
+      toast({
+        title: "휴가 계획이 추가되었습니다",
+        description: "선택한 황금연휴가 나의 휴가 계획에 추가되었습니다.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "오류가 발생했습니다",
+        description: "휴가 계획 추가에 실패했습니다. 다시 시도해주세요.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSelectRecommendation = (rec: typeof recommendations[0]) => {
+    const vacationPlan: InsertVacationPlan = {
+      userId,
+      title: rec.name,
+      startDate: rec.startDate,
+      endDate: rec.endDate,
+      leaveDaysUsed: rec.leaveDays,
+      destinations: destinations.map(d => d.countryCode),
+      notes: rec.warning || "추천 황금연휴",
+    };
+
+    createVacationPlanMutation.mutate(vacationPlan);
+  };
 
   return (
     <Card>
@@ -67,9 +117,11 @@ export default function VacationRecommendations({ userId, destinations }: Vacati
               )}
               <Button
                 size="sm"
+                onClick={() => handleSelectRecommendation(rec)}
+                disabled={createVacationPlanMutation.isPending}
                 className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded font-bold border-0"
               >
-                선택
+                {createVacationPlanMutation.isPending ? "추가 중..." : "선택"}
               </Button>
             </div>
           </div>
