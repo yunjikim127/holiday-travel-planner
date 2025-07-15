@@ -29,7 +29,7 @@ export const vacationPlans = pgTable("vacation_plans", {
   title: text("title").notNull(),
   startDate: text("start_date").notNull(),
   endDate: text("end_date").notNull(),
-  leaveDaysUsed: numeric("leave_days_used", { precision: 3, scale: 2 }).notNull(),
+  leaveDaysUsed: text("leave_days_used").notNull(),
   leaveType: text("leave_type").notNull().default("full"), // "full", "half", "quarter"
   destinations: json("destinations").$type<string[]>().notNull(),
   notes: text("notes"),

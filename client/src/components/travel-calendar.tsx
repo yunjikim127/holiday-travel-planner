@@ -188,7 +188,7 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
           title: `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()})`,
           startDate: formatLocalDate(startDate),
           endDate: formatLocalDate(endDate),
-          leaveDaysUsed: 1, // 기본값, 다이얼로그에서 변경됨
+          leaveDaysUsed: "1", // 기본값, 다이얼로그에서 변경됨
           leaveType: "full", // 기본값, 다이얼로그에서 변경됨
           destinations: destinations.map(d => d.countryCode),
           notes: "캘린더에서 직접 추가한 휴가",
@@ -203,7 +203,7 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
           title: `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()} ~ ${endDate.getMonth() + 1}/${endDate.getDate()})`,
           startDate: formatLocalDate(startDate),
           endDate: formatLocalDate(endDate),
-          leaveDaysUsed: selectedDates.length,
+          leaveDaysUsed: selectedDates.length.toString(),
           leaveType: "full",
           destinations: destinations.map(d => d.countryCode),
           notes: "캘린더에서 직접 추가한 휴가",
@@ -220,7 +220,7 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
 
   const handleLeaveTypeConfirm = () => {
     if (pendingVacationPlan) {
-      const leaveDaysUsed = selectedLeaveType === "full" ? 1 : selectedLeaveType === "half" ? 0.5 : 0.25;
+      const leaveDaysUsed = selectedLeaveType === "full" ? "1" : selectedLeaveType === "half" ? "0.5" : "0.25";
       const leaveTypeText = selectedLeaveType === "full" ? "종일" : selectedLeaveType === "half" ? "반차" : "반반차";
       
       const finalPlan: InsertVacationPlan = {

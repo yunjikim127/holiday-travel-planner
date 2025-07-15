@@ -146,7 +146,8 @@ export class MemStorage implements IStorage {
       destinations: plan.destinations as string[],
       title: plan.title || "휴가 계획",
       notes: plan.notes || null,
-      leaveType: plan.leaveType || "full"
+      leaveType: plan.leaveType || "full",
+      leaveDaysUsed: plan.leaveDaysUsed || "1"
     };
     this.vacationPlans.set(id, newPlan);
     return newPlan;
@@ -162,7 +163,8 @@ export class MemStorage implements IStorage {
       destinations: (updates.destinations as string[]) ?? plan.destinations,
       title: updates.title ?? plan.title,
       notes: updates.notes ?? plan.notes,
-      leaveType: updates.leaveType ?? plan.leaveType
+      leaveType: updates.leaveType ?? plan.leaveType,
+      leaveDaysUsed: updates.leaveDaysUsed ?? plan.leaveDaysUsed
     };
     this.vacationPlans.set(id, updatedPlan);
     return updatedPlan;
