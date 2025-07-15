@@ -125,7 +125,7 @@
 }
 
 .animate-scroll {
-  animation: scroll 30s linear infinite;
+  animation: scroll 45s linear infinite;
 }
 
 .animate-scroll:hover {
@@ -153,7 +153,7 @@
 
 /* Calendar specific styles */
 .calendar-day {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.1s ease-in-out;
 }
 
 .calendar-day:hover {

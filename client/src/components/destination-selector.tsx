@@ -93,14 +93,14 @@ export default function DestinationSelector({ userId }: DestinationSelectorProps
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle id="destinations-heading" className="flex items-center">
-          <Globe className="text-festival-amber mr-2" size={20} aria-hidden="true" />
+    <Card className="h-[240px]">
+      <CardHeader className="pb-3">
+        <CardTitle id="destinations-heading" className="flex items-center text-base">
+          <Globe className="text-festival-amber mr-2" size={16} aria-hidden="true" />
           여행 목적지
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 max-h-[180px] overflow-y-auto">
         {/* Popular Destinations Quick Select */}
         <div>
           <p className="text-sm font-medium text-gray-700 mb-2">인기 목적지</p>

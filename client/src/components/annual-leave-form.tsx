@@ -47,7 +47,7 @@ export default function AnnualLeaveForm({ userId, user }: AnnualLeaveFormProps) 
   const remainingLeaves = totalLeaves - usedLeaves;
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden h-[240px]">
       <CardHeader className="pb-3">
         <CardTitle id="annual-leave-heading" className="flex items-center text-base">
           <CalendarCheck className="text-vacation-green mr-2" size={16} aria-hidden="true" />

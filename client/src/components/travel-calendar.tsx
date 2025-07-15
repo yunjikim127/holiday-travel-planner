@@ -11,9 +11,10 @@ import { useToast } from "@/hooks/use-toast";
 interface TravelCalendarProps {
   userId: number;
   destinations: SelectedDestination[];
+  onDateChange?: (date: Date) => void;
 }
 
-export default function TravelCalendar({ userId, destinations }: TravelCalendarProps) {
+export default function TravelCalendar({ userId, destinations, onDateChange }: TravelCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date(2025, 6, 1)); // July 2025
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -88,6 +89,7 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
       newDate.setMonth(currentDate.getMonth() + 1);
     }
     setCurrentDate(newDate);
+    onDateChange?.(newDate);
   };
 
   const createVacationPlanMutation = useMutation({

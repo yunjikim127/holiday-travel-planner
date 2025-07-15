@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import CompactStatsBar from "@/components/compact-stats-bar";
 import AnnualLeaveForm from "@/components/annual-leave-form";
@@ -12,6 +13,8 @@ import { Bell, UserCircle } from "lucide-react";
 const CURRENT_USER_ID = 1;
 
 export default function TravelPlanner() {
+  const [currentCalendarDate, setCurrentCalendarDate] = useState(new Date(2025, 6, 1)); // July 2025
+  
   const { data: user } = useQuery({
     queryKey: ["/api/user", CURRENT_USER_ID],
   });
@@ -35,10 +38,10 @@ export default function TravelPlanner() {
                 href="https://www.myrealtrip.com/promotions/benefit"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm transition-colors"
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg transform hover:scale-105 transition-all duration-200 animate-pulse hover:animate-none"
                 aria-label="특가 보러가기"
               >
-                특가 보러가기
+                ✨ 특가 보러가기 ✨
               </a>
             </nav>
           </div>
@@ -63,7 +66,7 @@ export default function TravelPlanner() {
             
             {/* Main Calendar - mobile */}
             <section className="lg:hidden" aria-labelledby="calendar-heading">
-              <TravelCalendar userId={CURRENT_USER_ID} destinations={destinations} />
+              <TravelCalendar userId={CURRENT_USER_ID} destinations={destinations} onDateChange={setCurrentCalendarDate} />
             </section>
             
             <section aria-labelledby="destinations-heading">
@@ -81,8 +84,12 @@ export default function TravelPlanner() {
 
           {/* Main Calendar - Desktop */}
           <section className="hidden lg:block lg:col-span-2" aria-labelledby="main-calendar-heading">
-            <TravelCalendar userId={CURRENT_USER_ID} destinations={destinations} />
-            <TravelInsights destinations={destinations} />
+            <TravelCalendar userId={CURRENT_USER_ID} destinations={destinations} onDateChange={setCurrentCalendarDate} />
+            <TravelInsights 
+              destinations={destinations} 
+              currentMonth={currentCalendarDate.getMonth() + 1} 
+              currentYear={currentCalendarDate.getFullYear()} 
+            />
           </section>
         </div>
       </main>

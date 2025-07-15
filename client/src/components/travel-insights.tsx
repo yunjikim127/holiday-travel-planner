@@ -5,11 +5,11 @@ import { SelectedDestination, TravelInsight } from "@shared/schema";
 
 interface TravelInsightsProps {
   destinations: SelectedDestination[];
+  currentMonth?: number;
+  currentYear?: number;
 }
 
-export default function TravelInsights({ destinations }: TravelInsightsProps) {
-  const currentMonth = 7; // July
-  const currentYear = 2025;
+export default function TravelInsights({ destinations, currentMonth = 7, currentYear = 2025 }: TravelInsightsProps) {
 
   // Fixed queries for travel insights
   const usInsights = useQuery<TravelInsight>({

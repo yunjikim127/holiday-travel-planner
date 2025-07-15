@@ -5,11 +5,14 @@
 This is a modern full-stack web application designed to help Korean users plan their vacations around public holidays. The application provides a comprehensive travel planning tool that integrates Korean public holidays with destination-specific holiday calendars, vacation recommendations, and travel insights. Users can manage their annual leave, add custom company holidays, select travel destinations, and receive intelligent vacation suggestions that maximize their time off.
 
 **Recent Major Updates (July 15, 2025):**
-- Implemented comprehensive SEO optimization for Google and Naver search engines
-- Added Korean language support with proper meta tags and structured data
-- Enhanced accessibility with semantic HTML, ARIA labels, and proper heading structure
-- Added mouse hover tooltips for compact calendar view
-- Implemented 2-month calendar display for better vacation planning
+- Fixed Korean holiday dates to match official 2025 government calendar (개천절 10/3, 추석 대체공휴일 등)
+- Implemented dynamic travel insights that update based on current calendar month view
+- Enhanced "특가 보러가기" button with eye-catching gradient design and animation effects
+- Unified all sidebar component box heights to 240px for consistent visual layout
+- Improved hover response times for calendar tooltips (0.2s → 0.1s)
+- Reduced news ticker scroll speed for better readability (30s → 45s)
+- Added comprehensive monthly travel insights for all destination countries
+- Connected calendar navigation to real-time travel insights updates
 
 ## User Preferences
 

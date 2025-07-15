@@ -65,14 +65,14 @@ export default function VacationPlans({ userId }: VacationPlansProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle id="vacation-plans-heading" className="flex items-center">
-          <Calendar className="text-blue-500 mr-2" size={20} aria-hidden="true" />
+    <Card className="h-[240px]">
+      <CardHeader className="pb-3">
+        <CardTitle id="vacation-plans-heading" className="flex items-center text-base">
+          <Calendar className="text-blue-500 mr-2" size={16} aria-hidden="true" />
           나의 휴가 계획
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 max-h-[180px] overflow-y-auto">
         {vacationPlans.length === 0 ? (
           <p className="text-gray-500 text-center py-4">
             아직 등록된 휴가 계획이 없습니다.

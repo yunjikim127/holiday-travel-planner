@@ -168,24 +168,25 @@ export class MemStorage implements IStorage {
   }
 
   async getHolidays(countryCode: string, year: number): Promise<Holiday[]> {
-    // Korean holidays for 2025
+    // Korean holidays for 2025 (첨부 이미지 기준 정확한 관공서 공휴일)
     const koreanHolidays: Holiday[] = [
       { date: "2025-01-01", name: "신정", type: "public", country: "South Korea", countryCode: "KR" },
-      { date: "2025-01-28", name: "설날", type: "public", country: "South Korea", countryCode: "KR" },
+      { date: "2025-01-28", name: "설날(연휴)", type: "public", country: "South Korea", countryCode: "KR" },
       { date: "2025-01-29", name: "설날", type: "public", country: "South Korea", countryCode: "KR" },
-      { date: "2025-01-30", name: "설날", type: "public", country: "South Korea", countryCode: "KR" },
+      { date: "2025-01-30", name: "설날(연휴)", type: "public", country: "South Korea", countryCode: "KR" },
       { date: "2025-03-01", name: "삼일절", type: "public", country: "South Korea", countryCode: "KR" },
-      { date: "2025-05-01", name: "근로자의 날", type: "public", country: "South Korea", countryCode: "KR" },
+      { date: "2025-03-03", name: "대체공휴일(삼일절)", type: "public", country: "South Korea", countryCode: "KR" },
       { date: "2025-05-05", name: "어린이날", type: "public", country: "South Korea", countryCode: "KR" },
-      { date: "2025-05-12", name: "부처님 오신날", type: "public", country: "South Korea", countryCode: "KR" },
+      { date: "2025-05-05", name: "부처님오신날", type: "religious", country: "South Korea", countryCode: "KR" },
+      { date: "2025-05-06", name: "대체공휴일(부처님오신날)", type: "public", country: "South Korea", countryCode: "KR" },
       { date: "2025-06-06", name: "현충일", type: "public", country: "South Korea", countryCode: "KR" },
       { date: "2025-08-15", name: "광복절", type: "public", country: "South Korea", countryCode: "KR" },
       { date: "2025-10-03", name: "개천절", type: "public", country: "South Korea", countryCode: "KR" },
       { date: "2025-10-06", name: "추석", type: "public", country: "South Korea", countryCode: "KR" },
       { date: "2025-10-07", name: "추석", type: "public", country: "South Korea", countryCode: "KR" },
-      { date: "2025-10-08", name: "추석", type: "public", country: "South Korea", countryCode: "KR" },
+      { date: "2025-10-08", name: "대체공휴일(추석)", type: "public", country: "South Korea", countryCode: "KR" },
       { date: "2025-10-09", name: "한글날", type: "public", country: "South Korea", countryCode: "KR" },
-      { date: "2025-12-25", name: "성탄절", type: "public", country: "South Korea", countryCode: "KR" },
+      { date: "2025-12-25", name: "기독탄신일", type: "public", country: "South Korea", countryCode: "KR" },
     ];
 
     // Japanese holidays for 2025
@@ -342,56 +343,103 @@ export class MemStorage implements IStorage {
   }
 
   async getTravelInsights(countryCode: string, month: number, year: number): Promise<TravelInsight> {
-    const insights: { [key: string]: TravelInsight } = {
-      'JP': {
-        countryCode: 'JP',
-        countryName: '일본',
-        month,
-        year,
-        suitabilityScore: 85,
-        weather: '매우 좋음',
-        weatherScore: 'good',
-        flightCost: '높음 (골든위크)',
-        flightCostScore: 'high',
-        crowdLevel: '매우 높음',
-        crowdScore: 'high',
-        events: [
-          { name: '골든위크', dates: '4/29-5/5' },
-          { name: '도쿄 카츠도 축제', dates: '5/18-19' }
-        ]
-      },
-      'TH': {
-        countryCode: 'TH',
-        countryName: '태국',
-        month,
-        year,
-        suitabilityScore: 65,
-        weather: '우기 시작',
-        weatherScore: 'fair',
-        flightCost: '보통',
-        flightCostScore: 'medium',
-        crowdLevel: '낮음',
-        crowdScore: 'low',
-        events: [
-          { name: '로켓 페스티벌', dates: '5/11-13' },
-          { name: '부처님 오신날', dates: '5/22' }
-        ]
-      }
+    const getMonthlyInsights = (country: string, monthNum: number) => {
+      const monthData = {
+        'JP': {
+          1: { weather: '추위, 설 연휴', weatherScore: 'fair', flightCost: '높음', events: [{ name: '신정 연휴', dates: '1/1-3' }] },
+          2: { weather: '추위, 매화 개화', weatherScore: 'fair', flightCost: '보통', events: [{ name: '매화축제', dates: '2월 중순' }] },
+          3: { weather: '봄 시작, 벚꽃 준비', weatherScore: 'good', flightCost: '높음', events: [{ name: '벚꽃 개화 시작', dates: '3월 말' }] },
+          4: { weather: '벚꽃 만개', weatherScore: 'good', flightCost: '매우 높음', events: [{ name: '벚꽃축제', dates: '4월 전체' }] },
+          5: { weather: '완벽한 날씨', weatherScore: 'good', flightCost: '매우 높음', events: [{ name: '골든위크', dates: '4/29-5/5' }] },
+          6: { weather: '장마 시작', weatherScore: 'fair', flightCost: '보통', events: [{ name: '수국축제', dates: '6월 중순' }] },
+          7: { weather: '무더위, 여름축제', weatherScore: 'fair', flightCost: '높음', events: [{ name: '기온축제', dates: '7월 중순' }] },
+          8: { weather: '무더위 절정', weatherScore: 'poor', flightCost: '높음', events: [{ name: '오봉축제', dates: '8월 중순' }] },
+          9: { weather: '태풍 시즌', weatherScore: 'fair', flightCost: '보통', events: [{ name: '가을축제', dates: '9월 말' }] },
+          10: { weather: '가을 단풍', weatherScore: 'good', flightCost: '높음', events: [{ name: '단풍축제', dates: '10월 전체' }] },
+          11: { weather: '선선한 가을', weatherScore: 'good', flightCost: '보통', events: [{ name: '국화축제', dates: '11월 중순' }] },
+          12: { weather: '겨울 시작', weatherScore: 'fair', flightCost: '높음', events: [{ name: '일루미네이션', dates: '12월 전체' }] }
+        },
+        'TH': {
+          1: { weather: '건기, 완벽한 날씨', weatherScore: 'good', flightCost: '높음', events: [{ name: '신정축제', dates: '1/1' }] },
+          2: { weather: '건기, 매우 좋음', weatherScore: 'good', flightCost: '높음', events: [{ name: '마카부차', dates: '2월 중순' }] },
+          3: { weather: '더워지기 시작', weatherScore: 'good', flightCost: '보통', events: [{ name: '코끼리축제', dates: '3월 중순' }] },
+          4: { weather: '매우 더움', weatherScore: 'fair', flightCost: '보통', events: [{ name: '송크란', dates: '4/13-15' }] },
+          5: { weather: '우기 시작', weatherScore: 'fair', flightCost: '낮음', events: [{ name: '로켓축제', dates: '5월 중순' }] },
+          6: { weather: '우기', weatherScore: 'poor', flightCost: '낮음', events: [{ name: '과일축제', dates: '6월 말' }] },
+          7: { weather: '우기 절정', weatherScore: 'poor', flightCost: '낮음', events: [{ name: '촛불축제', dates: '7월 중순' }] },
+          8: { weather: '우기', weatherScore: 'poor', flightCost: '낮음', events: [{ name: '어머니날', dates: '8/12' }] },
+          9: { weather: '우기 끝', weatherScore: 'fair', flightCost: '보통', events: [{ name: '수상축제', dates: '9월 말' }] },
+          10: { weather: '건기 시작', weatherScore: 'good', flightCost: '보통', events: [{ name: '베지터리안축제', dates: '10월 중순' }] },
+          11: { weather: '완벽한 날씨', weatherScore: 'good', flightCost: '높음', events: [{ name: '로이크라통', dates: '11월 보름달' }] },
+          12: { weather: '건기, 성수기', weatherScore: 'good', flightCost: '매우 높음', events: [{ name: '신년준비축제', dates: '12월 말' }] }
+        },
+        'VN': {
+          1: { weather: '건기, 서늘함', weatherScore: 'good', flightCost: '높음', events: [{ name: '테트준비', dates: '1월 말' }] },
+          2: { weather: '테트 시즌', weatherScore: 'good', flightCost: '매우 높음', events: [{ name: '테트(구정)', dates: '2월 초' }] },
+          3: { weather: '봄날씨', weatherScore: 'good', flightCost: '보통', events: [{ name: '꽃축제', dates: '3월 중순' }] },
+          4: { weather: '완벽한 날씨', weatherScore: 'good', flightCost: '보통', events: [{ name: '흉왕기념일', dates: '4/6' }] },
+          5: { weather: '더워지기 시작', weatherScore: 'fair', flightCost: '낮음', events: [{ name: '노동절', dates: '5/1' }] },
+          6: { weather: '우기 시작', weatherScore: 'fair', flightCost: '낮음', events: [{ name: '여름축제', dates: '6월 중순' }] },
+          7: { weather: '우기, 더움', weatherScore: 'poor', flightCost: '낮음', events: [{ name: '가우다이축제', dates: '7월 말' }] },
+          8: { weather: '우기 절정', weatherScore: 'poor', flightCost: '낮음', events: [{ name: '유령의 달', dates: '8월 전체' }] },
+          9: { weather: '우기 끝', weatherScore: 'fair', flightCost: '보통', events: [{ name: '국경일', dates: '9/2' }] },
+          10: { weather: '건기 시작', weatherScore: 'good', flightCost: '보통', events: [{ name: '추수축제', dates: '10월 중순' }] },
+          11: { weather: '완벽한 날씨', weatherScore: 'good', flightCost: '높음', events: [{ name: '달팟축제', dates: '11월 보름달' }] },
+          12: { weather: '건기, 성수기', weatherScore: 'good', flightCost: '높음', events: [{ name: '크리스마스', dates: '12/25' }] }
+        },
+        'US': {
+          1: { weather: '겨울, 추위', weatherScore: 'poor', flightCost: '낮음', events: [{ name: '신정', dates: '1/1' }] },
+          2: { weather: '겨울 끝', weatherScore: 'fair', flightCost: '낮음', events: [{ name: '대통령의날', dates: '2월 3주' }] },
+          3: { weather: '봄 시작', weatherScore: 'good', flightCost: '보통', events: [{ name: '봄방학', dates: '3월 중순' }] },
+          4: { weather: '완벽한 봄', weatherScore: 'good', flightCost: '높음', events: [{ name: '벚꽃축제', dates: '4월 초' }] },
+          5: { weather: '따뜻한 봄', weatherScore: 'good', flightCost: '높음', events: [{ name: '현충일', dates: '5월 마지막주' }] },
+          6: { weather: '여름 시작', weatherScore: 'good', flightCost: '높음', events: [{ name: '졸업시즌', dates: '6월 전체' }] },
+          7: { weather: '여름 성수기', weatherScore: 'good', flightCost: '매우 높음', events: [{ name: '독립기념일', dates: '7/4' }] },
+          8: { weather: '무더위', weatherScore: 'fair', flightCost: '높음', events: [{ name: '여름휴가철', dates: '8월 전체' }] },
+          9: { weather: '가을 시작', weatherScore: 'good', flightCost: '보통', events: [{ name: '노동절', dates: '9월 첫주' }] },
+          10: { weather: '가을 단풍', weatherScore: 'good', flightCost: '높음', events: [{ name: '할로윈', dates: '10/31' }] },
+          11: { weather: '쌀쌀한 가을', weatherScore: 'fair', flightCost: '보통', events: [{ name: '추수감사절', dates: '11월 4주' }] },
+          12: { weather: '겨울 시작', weatherScore: 'fair', flightCost: '매우 높음', events: [{ name: '크리스마스', dates: '12/25' }] }
+        }
+      };
+
+      const defaultData = { weather: '보통', weatherScore: 'fair', flightCost: '보통', events: [] };
+      return monthData[country]?.[monthNum] || defaultData;
     };
 
-    return insights[countryCode] || {
+    const monthlyData = getMonthlyInsights(countryCode, month);
+    const countryNames = {
+      'JP': '일본',
+      'TH': '태국', 
+      'VN': '베트남',
+      'US': '미국',
+      'FR': '프랑스',
+      'IT': '이탈리아'
+    };
+
+    const flightCostScore = monthlyData.flightCost === '매우 높음' ? 'high' : 
+                           monthlyData.flightCost === '높음' ? 'high' : 
+                           monthlyData.flightCost === '낮음' ? 'low' : 'medium';
+
+    const crowdScore = flightCostScore === 'high' ? 'high' : 
+                       flightCostScore === 'low' ? 'low' : 'medium';
+
+    const suitabilityScore = monthlyData.weatherScore === 'good' ? 85 :
+                             monthlyData.weatherScore === 'fair' ? 65 : 45;
+
+    return {
       countryCode,
-      countryName: countryCode,
+      countryName: countryNames[countryCode] || countryCode,
       month,
       year,
-      suitabilityScore: 70,
-      weather: '보통',
-      weatherScore: 'fair',
-      flightCost: '보통',
-      flightCostScore: 'medium',
-      crowdLevel: '보통',
-      crowdScore: 'medium',
-      events: []
+      suitabilityScore,
+      weather: monthlyData.weather,
+      weatherScore: monthlyData.weatherScore as 'good' | 'fair' | 'poor',
+      flightCost: monthlyData.flightCost,
+      flightCostScore: flightCostScore as 'low' | 'medium' | 'high',
+      crowdLevel: monthlyData.flightCost,
+      crowdScore: crowdScore as 'low' | 'medium' | 'high',
+      events: monthlyData.events
     };
   }
 }
