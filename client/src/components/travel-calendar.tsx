@@ -209,6 +209,20 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
           notes: "캘린더에서 직접 추가한 휴가",
         };
         
+        // 총 연차 초과 검사
+        const newTotalUsed = totalUsed + selectedDates.length;
+        if (newTotalUsed > totalLeaves) {
+          toast({
+            title: "연차 부족",
+            description: `총 연차(${totalLeaves}일)를 모두 소진하여 추가 휴가 계획을 생성할 수 없습니다. 현재 사용 연차: ${totalUsed}일`,
+            variant: "destructive",
+          });
+          setIsDragging(false);
+          setDragStartDate(null);
+          setSelectedDates([]);
+          return;
+        }
+        
         createVacationPlanMutation.mutate(vacationPlan);
       }
     }
@@ -229,6 +243,20 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
         leaveType: selectedLeaveType,
         title: `${leaveTypeText} 휴가 (${new Date(pendingVacationPlan.startDate).getMonth() + 1}/${new Date(pendingVacationPlan.startDate).getDate()})`,
       };
+      
+      // 총 연차 초과 검사
+      const newTotalUsed = totalUsed + parseFloat(leaveDaysUsed);
+      if (newTotalUsed > totalLeaves) {
+        toast({
+          title: "연차 부족",
+          description: `총 연차(${totalLeaves}일)를 모두 소진하여 추가 휴가 계획을 생성할 수 없습니다. 현재 사용 연차: ${totalUsed}일`,
+          variant: "destructive",
+        });
+        setLeaveTypeDialogOpen(false);
+        setPendingVacationPlan(null);
+        setSelectedLeaveType("full");
+        return;
+      }
       
       createVacationPlanMutation.mutate(finalPlan);
     }
