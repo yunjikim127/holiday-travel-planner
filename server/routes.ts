@@ -142,11 +142,18 @@ Crawl-delay: 1`);
 
   app.post("/api/vacation-plans", async (req, res) => {
     try {
+      console.log("Received vacation plan data:", JSON.stringify(req.body, null, 2));
       const plan = insertVacationPlanSchema.parse(req.body);
+      console.log("Parsed vacation plan:", JSON.stringify(plan, null, 2));
       const newPlan = await storage.createVacationPlan(plan);
       res.json(newPlan);
     } catch (error) {
-      res.status(400).json({ message: "Invalid vacation plan data" });
+      console.error("Vacation plan creation error:", error);
+      if (error instanceof Error) {
+        console.error("Error message:", error.message);
+        console.error("Error stack:", error.stack);
+      }
+      res.status(400).json({ message: "Invalid vacation plan data", error: error.message });
     }
   });
 
