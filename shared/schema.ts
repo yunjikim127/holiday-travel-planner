@@ -26,11 +26,13 @@ export const selectedDestinations = pgTable("selected_destinations", {
 export const vacationPlans = pgTable("vacation_plans", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull(),
-  startDate: date("start_date").notNull(),
-  endDate: date("end_date").notNull(),
+  title: text("title").notNull(),
+  startDate: text("start_date").notNull(),
+  endDate: text("end_date").notNull(),
   leaveDaysUsed: integer("leave_days_used").notNull(),
+  leaveType: text("leave_type").notNull().default("full"), // "full", "half", "quarter"
   destinations: json("destinations").$type<string[]>().notNull(),
-  isSelected: boolean("is_selected").notNull().default(false),
+  notes: text("notes"),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -53,11 +55,13 @@ export const insertDestinationSchema = createInsertSchema(selectedDestinations).
 
 export const insertVacationPlanSchema = createInsertSchema(vacationPlans).pick({
   userId: true,
+  title: true,
   startDate: true,
   endDate: true,
   leaveDaysUsed: true,
+  leaveType: true,
   destinations: true,
-  isSelected: true,
+  notes: true,
 });
 
 export type User = typeof users.$inferSelect;

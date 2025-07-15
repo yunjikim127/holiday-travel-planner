@@ -144,7 +144,9 @@ export class MemStorage implements IStorage {
       ...plan, 
       id,
       destinations: plan.destinations as string[],
-      isSelected: plan.isSelected ?? false
+      title: plan.title || "휴가 계획",
+      notes: plan.notes || null,
+      leaveType: plan.leaveType || "full"
     };
     this.vacationPlans.set(id, newPlan);
     return newPlan;
@@ -157,7 +159,10 @@ export class MemStorage implements IStorage {
     const updatedPlan: VacationPlan = { 
       ...plan, 
       ...updates,
-      destinations: (updates.destinations as string[]) ?? plan.destinations
+      destinations: (updates.destinations as string[]) ?? plan.destinations,
+      title: updates.title ?? plan.title,
+      notes: updates.notes ?? plan.notes,
+      leaveType: updates.leaveType ?? plan.leaveType
     };
     this.vacationPlans.set(id, updatedPlan);
     return updatedPlan;

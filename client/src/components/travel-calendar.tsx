@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChevronLeft, ChevronRight, Calendar, AlertTriangle } from "lucide-react";
 import { SelectedDestination, Holiday, CustomHoliday, VacationPlan, InsertVacationPlan, User } from "@shared/schema";
 import { getHolidayColor } from "@/lib/holidays";
@@ -19,6 +21,9 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartDate, setDragStartDate] = useState<Date | null>(null);
+  const [leaveTypeDialogOpen, setLeaveTypeDialogOpen] = useState(false);
+  const [selectedLeaveType, setSelectedLeaveType] = useState<"full" | "half" | "quarter">("full");
+  const [pendingVacationPlan, setPendingVacationPlan] = useState<InsertVacationPlan | null>(null);
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
   const queryClient = useQueryClient();
@@ -175,25 +180,62 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
       };
-      
-      const vacationPlan: InsertVacationPlan = {
-        userId,
-        title: selectedDates.length === 1 
-          ? `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()})`
-          : `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()} ~ ${endDate.getMonth() + 1}/${endDate.getDate()})`,
-        startDate: formatLocalDate(startDate),
-        endDate: formatLocalDate(endDate),
-        leaveDaysUsed: selectedDates.length,
-        destinations: destinations.map(d => d.countryCode),
-        notes: "캘린더에서 직접 추가한 휴가",
-      };
-      
-      createVacationPlanMutation.mutate(vacationPlan);
+
+      // 단일 날짜일 때만 휴가 유형 선택 다이얼로그 표시
+      if (selectedDates.length === 1) {
+        const vacationPlan: InsertVacationPlan = {
+          userId,
+          title: `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()})`,
+          startDate: formatLocalDate(startDate),
+          endDate: formatLocalDate(endDate),
+          leaveDaysUsed: 1, // 기본값, 다이얼로그에서 변경됨
+          leaveType: "full", // 기본값, 다이얼로그에서 변경됨
+          destinations: destinations.map(d => d.countryCode),
+          notes: "캘린더에서 직접 추가한 휴가",
+        };
+        
+        setPendingVacationPlan(vacationPlan);
+        setLeaveTypeDialogOpen(true);
+      } else {
+        // 여러 날짜일 때는 바로 전일 휴가로 생성
+        const vacationPlan: InsertVacationPlan = {
+          userId,
+          title: `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()} ~ ${endDate.getMonth() + 1}/${endDate.getDate()})`,
+          startDate: formatLocalDate(startDate),
+          endDate: formatLocalDate(endDate),
+          leaveDaysUsed: selectedDates.length,
+          leaveType: "full",
+          destinations: destinations.map(d => d.countryCode),
+          notes: "캘린더에서 직접 추가한 휴가",
+        };
+        
+        createVacationPlanMutation.mutate(vacationPlan);
+      }
     }
     
     setIsDragging(false);
     setDragStartDate(null);
     setSelectedDates([]);
+  };
+
+  const handleLeaveTypeConfirm = () => {
+    if (pendingVacationPlan) {
+      const leaveDaysUsed = selectedLeaveType === "full" ? 1 : selectedLeaveType === "half" ? 0.5 : 0.25;
+      const leaveTypeText = selectedLeaveType === "full" ? "종일" : selectedLeaveType === "half" ? "반차" : "반반차";
+      
+      const finalPlan: InsertVacationPlan = {
+        ...pendingVacationPlan,
+        leaveDaysUsed,
+        leaveType: selectedLeaveType,
+        title: `${leaveTypeText} 휴가 (${new Date(pendingVacationPlan.startDate).getMonth() + 1}/${new Date(pendingVacationPlan.startDate).getDate()})`,
+      };
+      
+      createVacationPlanMutation.mutate(finalPlan);
+    }
+    
+    setLeaveTypeDialogOpen(false);
+    setPendingVacationPlan(null);
+    setSelectedLeaveType("full");
   };
 
   // 병합 기능을 완전히 제거하여 무한 루프 방지
@@ -501,6 +543,45 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
           {renderMonth(currentDate, currentMonthDays, 0)}
           {renderMonth(nextMonth, nextMonthDays, 1)}
         </div>
+
+        {/* 휴가 유형 선택 다이얼로그 */}
+        <Dialog open={leaveTypeDialogOpen} onOpenChange={setLeaveTypeDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>휴가 유형 선택</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <p className="text-sm text-gray-600">
+                선택한 날짜에 어떤 종류의 휴가를 사용하시겠습니까?
+              </p>
+              <Select value={selectedLeaveType} onValueChange={(value: "full" | "half" | "quarter") => setSelectedLeaveType(value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="full">종일 휴가 (1일)</SelectItem>
+                  <SelectItem value="half">반차 (0.5일)</SelectItem>
+                  <SelectItem value="quarter">반반차 (0.25일)</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="flex justify-end space-x-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setLeaveTypeDialogOpen(false);
+                    setPendingVacationPlan(null);
+                    setSelectedLeaveType("full");
+                  }}
+                >
+                  취소
+                </Button>
+                <Button onClick={handleLeaveTypeConfirm}>
+                  확인
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );

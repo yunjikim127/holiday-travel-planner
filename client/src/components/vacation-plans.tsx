@@ -89,7 +89,7 @@ export default function VacationPlans({ userId }: VacationPlansProps) {
                   <h4 className="font-medium text-sm">{plan.title}</h4>
                   <div className="flex items-center space-x-2">
                     <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs">
-                      연차 {plan.leaveDaysUsed}일
+                      연차 {plan.leaveDaysUsed}일 {plan.leaveType === "half" ? "(반차)" : plan.leaveType === "quarter" ? "(반반차)" : ""}
                     </span>
                     <Button
                       size="sm"
