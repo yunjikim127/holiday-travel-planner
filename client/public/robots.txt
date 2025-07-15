@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Korean Search Engines
+User-agent: Yeti
+Allow: /
+
+User-agent: NaverBot
+Allow: /
+
+User-agent: Daumoa
+Allow: /
+
+# Sitemap
+Sitemap: https://korean-holiday-planner.replit.app/sitemap.xml
+
+# Crawl-delay for Korean search engines
+Crawl-delay: 1

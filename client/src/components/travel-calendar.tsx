@@ -486,7 +486,7 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
       {/* Main Header */}
       <CardHeader className="flex flex-row justify-between items-center p-4 border-b">
         <div className="flex flex-col space-y-1">
-          <h2 className="text-lg font-semibold">
+          <h2 id="calendar-heading" className="text-lg font-semibold">
             2025년 대한민국 총 공휴일: 16일
           </h2>
           <div className="text-xs text-gray-600">

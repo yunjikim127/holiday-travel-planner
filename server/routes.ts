@@ -9,6 +9,46 @@ import {
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // SEO routes
+  app.get('/robots.txt', (req, res) => {
+    res.type('text/plain');
+    res.send(`User-agent: *
+Allow: /
+
+# Korean Search Engines
+User-agent: Yeti
+Allow: /
+
+User-agent: NaverBot
+Allow: /
+
+User-agent: Daumoa
+Allow: /
+
+# Sitemap
+Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml
+
+# Crawl-delay for Korean search engines
+Crawl-delay: 1`);
+  });
+
+  app.get('/sitemap.xml', (req, res) => {
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const lastMod = new Date().toISOString().split('T')[0];
+    
+    res.type('application/xml');
+    res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>${baseUrl}/</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="${baseUrl}/" />
+  </url>
+</urlset>`);
+  });
   // User routes
   app.get("/api/user/:id", async (req, res) => {
     try {

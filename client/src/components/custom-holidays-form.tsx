@@ -88,8 +88,8 @@ export default function CustomHolidaysForm({ userId }: CustomHolidaysFormProps) 
   return (
     <Card className="overflow-hidden">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center text-base">
-          <PlusCircle className="text-purple-500 mr-2" size={16} />
+        <CardTitle id="custom-holidays-heading" className="flex items-center text-base">
+          <PlusCircle className="text-purple-500 mr-2" size={16} aria-hidden="true" />
           회사 휴무일 추가
         </CardTitle>
       </CardHeader>

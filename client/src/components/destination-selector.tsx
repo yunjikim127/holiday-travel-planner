@@ -95,8 +95,8 @@ export default function DestinationSelector({ userId }: DestinationSelectorProps
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Globe className="text-festival-amber mr-2" size={20} />
+        <CardTitle id="destinations-heading" className="flex items-center">
+          <Globe className="text-festival-amber mr-2" size={20} aria-hidden="true" />
           여행 목적지
         </CardTitle>
       </CardHeader>

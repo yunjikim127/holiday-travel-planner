@@ -4,6 +4,13 @@
 
 This is a modern full-stack web application designed to help Korean users plan their vacations around public holidays. The application provides a comprehensive travel planning tool that integrates Korean public holidays with destination-specific holiday calendars, vacation recommendations, and travel insights. Users can manage their annual leave, add custom company holidays, select travel destinations, and receive intelligent vacation suggestions that maximize their time off.
 
+**Recent Major Updates (July 15, 2025):**
+- Implemented comprehensive SEO optimization for Google and Naver search engines
+- Added Korean language support with proper meta tags and structured data
+- Enhanced accessibility with semantic HTML, ARIA labels, and proper heading structure
+- Added mouse hover tooltips for compact calendar view
+- Implemented 2-month calendar display for better vacation planning
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -108,3 +115,25 @@ The PostgreSQL schema includes:
 - **Caching**: React Query provides intelligent client-side caching
 
 The application is designed as a production-ready system with proper error handling, type safety throughout the stack, and a scalable architecture that can accommodate future enhancements like user authentication, real-time collaboration, and advanced travel recommendations.
+
+## SEO Optimization
+
+### Search Engine Optimization Features
+- **Korean Language Support**: HTML lang="ko", Korean meta descriptions and keywords
+- **Meta Tags**: Comprehensive title, description, and keyword optimization for Korean market
+- **Open Graph & Twitter Cards**: Social media sharing optimization
+- **Structured Data**: JSON-LD schema markup for web applications
+- **Sitemap & Robots.txt**: Dynamic generation with Korean search engine support
+- **Semantic HTML**: Proper header hierarchy (H1, H2), ARIA labels, and semantic elements
+- **Accessibility**: Screen reader support, keyboard navigation, and proper contrast
+
+### Korean Search Engine Compatibility
+- **Naver SEO**: Follows Naver webmaster guidelines with proper meta tags
+- **Google Korea**: Optimized for Korean language queries and local search
+- **Crawl Optimization**: Robots.txt configured for Yeti, NaverBot, and Daumoa crawlers
+
+### Key SEO Elements
+- Title: "한국 공휴일 여행 플래너 2025 | 연차 계산 및 최적 여행 일정 추천"
+- Description: Focus on 2025 Korean holidays, vacation planning, and travel optimization
+- Keywords: 한국 공휴일, 여행 플래너, 연차 계산, 휴가 계획, 2025년 공휴일
+- Canonical URLs and hreflang tags for internationalization

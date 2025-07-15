@@ -49,8 +49,8 @@ export default function AnnualLeaveForm({ userId, user }: AnnualLeaveFormProps) 
   return (
     <Card className="overflow-hidden">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center text-base">
-          <CalendarCheck className="text-vacation-green mr-2" size={16} />
+        <CardTitle id="annual-leave-heading" className="flex items-center text-base">
+          <CalendarCheck className="text-vacation-green mr-2" size={16} aria-hidden="true" />
           연차 설정
         </CardTitle>
       </CardHeader>

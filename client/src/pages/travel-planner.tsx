@@ -23,21 +23,29 @@ export default function TravelPlanner() {
   return (
     <div className="min-h-screen bg-gray-50 font-noto">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white shadow-sm border-b" role="banner">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <h1 className="text-xl font-bold text-gray-900">🇰🇷 한국 공휴일 여행 플래너</h1>
-              <span className="bg-korean-blue text-white px-2 py-1 rounded text-xs font-medium">2025</span>
+              <span className="bg-korean-blue text-white px-2 py-1 rounded text-xs font-medium" aria-label="2025년 버전">2025</span>
             </div>
-            <div className="flex items-center space-x-4">
-              <button className="text-gray-500 hover:text-gray-700">
+            <nav className="flex items-center space-x-4" aria-label="사용자 메뉴">
+              <button 
+                className="text-gray-500 hover:text-gray-700" 
+                aria-label="알림"
+                title="알림"
+              >
                 <Bell size={20} />
               </button>
-              <button className="text-gray-500 hover:text-gray-700">
+              <button 
+                className="text-gray-500 hover:text-gray-700"
+                aria-label="사용자 프로필"
+                title="사용자 프로필"
+              >
                 <UserCircle size={24} />
               </button>
-            </div>
+            </nav>
           </div>
         </div>
       </header>
@@ -45,31 +53,44 @@ export default function TravelPlanner() {
       {/* Compact Stats Bar */}
       <CompactStatsBar user={user} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6" role="main">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Left Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
-            <AnnualLeaveForm userId={CURRENT_USER_ID} user={user} />
-            <CustomHolidaysForm userId={CURRENT_USER_ID} />
+          <aside className="lg:col-span-1 space-y-6" role="complementary" aria-label="사이드바">
+            <section aria-labelledby="annual-leave-heading">
+              <AnnualLeaveForm userId={CURRENT_USER_ID} user={user} />
+            </section>
             
-            {/* Main Calendar - moved after company holidays */}
-            <div className="lg:hidden">
+            <section aria-labelledby="custom-holidays-heading">
+              <CustomHolidaysForm userId={CURRENT_USER_ID} />
+            </section>
+            
+            {/* Main Calendar - mobile */}
+            <section className="lg:hidden" aria-labelledby="calendar-heading">
               <TravelCalendar userId={CURRENT_USER_ID} destinations={destinations} />
-            </div>
+            </section>
             
-            <DestinationSelector userId={CURRENT_USER_ID} />
-            <VacationRecommendations userId={CURRENT_USER_ID} destinations={destinations} />
-            <VacationPlans userId={CURRENT_USER_ID} />
-          </div>
+            <section aria-labelledby="destinations-heading">
+              <DestinationSelector userId={CURRENT_USER_ID} />
+            </section>
+            
+            <section aria-labelledby="recommendations-heading">
+              <VacationRecommendations userId={CURRENT_USER_ID} destinations={destinations} />
+            </section>
+            
+            <section aria-labelledby="vacation-plans-heading">
+              <VacationPlans userId={CURRENT_USER_ID} />
+            </section>
+          </aside>
 
           {/* Main Calendar - Desktop */}
-          <div className="hidden lg:block lg:col-span-2">
+          <section className="hidden lg:block lg:col-span-2" aria-labelledby="main-calendar-heading">
             <TravelCalendar userId={CURRENT_USER_ID} destinations={destinations} />
             <TravelInsights destinations={destinations} />
-          </div>
+          </section>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

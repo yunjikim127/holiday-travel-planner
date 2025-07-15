@@ -67,8 +67,8 @@ export default function VacationPlans({ userId }: VacationPlansProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Calendar className="text-blue-500 mr-2" size={20} />
+        <CardTitle id="vacation-plans-heading" className="flex items-center">
+          <Calendar className="text-blue-500 mr-2" size={20} aria-hidden="true" />
           나의 휴가 계획
         </CardTitle>
       </CardHeader>

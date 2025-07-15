@@ -87,8 +87,8 @@ export default function VacationRecommendations({ userId, destinations }: Vacati
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Lightbulb className="text-yellow-500 mr-2" size={20} />
+        <CardTitle id="recommendations-heading" className="flex items-center">
+          <Lightbulb className="text-yellow-500 mr-2" size={20} aria-hidden="true" />
           추천 황금연휴
         </CardTitle>
       </CardHeader>
