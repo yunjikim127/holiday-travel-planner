@@ -41,7 +41,7 @@ export default function TravelPlanner() {
                 className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg transform hover:scale-105 transition-all duration-200 animate-pulse hover:animate-none"
                 aria-label="특가 보러가기"
               >
-                ✨ 특가 보러가기 ✨
+✨ 여행 특가 보러가기 ✨
               </a>
             </nav>
           </div>

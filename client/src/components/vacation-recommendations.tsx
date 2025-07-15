@@ -85,14 +85,14 @@ export default function VacationRecommendations({ userId, destinations }: Vacati
   };
 
   return (
-    <Card className="h-[240px]">
+    <Card>
       <CardHeader className="pb-3">
         <CardTitle id="recommendations-heading" className="flex items-center text-base">
           <Lightbulb className="text-yellow-500 mr-2" size={16} aria-hidden="true" />
           추천 황금연휴
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3 max-h-[180px] overflow-y-auto">
+      <CardContent className="space-y-3">
         {recommendations.map((rec) => (
           <div key={rec.id} className="border border-vacation-green rounded-md p-3">
             <div className="flex justify-between items-start mb-2">

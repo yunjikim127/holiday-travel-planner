@@ -19,18 +19,7 @@ export default function CompactStatsBar({ user }: CompactStatsBarProps) {
   return (
     <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-        {/* Main Stats Row */}
-        <div className="flex flex-wrap items-center justify-between text-sm font-bold mb-2 text-white">
-          <div className="flex flex-col space-y-2 text-white">
-            <span className="text-white">2025년 대한민국 총 공휴일: <strong className="text-yellow-300">16일</strong></span>
-            <div className="text-xs text-white">
-              <div>주요 연휴 기간:</div>
-              <div>1. 설 연휴: 1월 28일(화)-30일(목) (<strong className="text-yellow-300">3일</strong>)</div>
-              <div>2. 어린이날: 5월 5일(월) • 추석: 10월 6일(월)-8일(수) (<strong className="text-yellow-300">3일</strong>)</div>
-              <div>3. 한글날: 10월 9일(목) • 크리스마스: 12월 25일(목)</div>
-            </div>
-          </div>
-        </div>
+
         
         {/* Scrolling News Feeds */}
         <div className="space-y-1">
