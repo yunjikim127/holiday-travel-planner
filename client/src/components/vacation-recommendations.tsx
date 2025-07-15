@@ -15,36 +15,36 @@ export default function VacationRecommendations({ userId, destinations }: Vacati
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  // Mock recommendations based on Korean holidays and destinations
+  // 정확한 2025년 한국 공휴일 기반 추천
   const recommendations = [
     {
       id: 1,
       name: "어린이날 연휴",
-      period: "5월 4일(토) ~ 5월 7일(화)",
+      period: "5월 3일(토) ~ 5월 6일(화)",
       duration: "4일 연휴",
-      leaveDays: 1,
-      startDate: "2025-05-04",
-      endDate: "2025-05-07",
+      leaveDays: 1, // 5월 6일(화) 연차 1일 사용
+      startDate: "2025-05-03",
+      endDate: "2025-05-06",
       warning: destinations.find(d => d.countryCode === 'JP') ? "일본 골든위크와 겹침 주의" : null,
     },
     {
       id: 2,
-      name: "한글날 연휴",
-      period: "10월 7일(월) ~ 10월 11일(금)",
+      name: "추석 연휴",
+      period: "10월 5일(일) ~ 10월 9일(목)",
       duration: "5일 연휴",
-      leaveDays: 2,
-      startDate: "2025-10-07",
-      endDate: "2025-10-11",
+      leaveDays: 1, // 10월 7일(화) 연차 1일 사용
+      startDate: "2025-10-05",
+      endDate: "2025-10-09",
       warning: destinations.find(d => d.countryCode === 'TH') ? "태국 성수기 시작" : null,
     },
     {
       id: 3,
-      name: "추석 연휴 확장",
-      period: "10월 5일(일) ~ 10월 10일(금)",
-      duration: "6일 연휴",
-      leaveDays: 2,
-      startDate: "2025-10-05",
-      endDate: "2025-10-10",
+      name: "한글날 연휴",
+      period: "10월 9일(목) ~ 10월 12일(일)",
+      duration: "4일 연휴",
+      leaveDays: 1, // 10월 10일(금) 연차 1일 사용
+      startDate: "2025-10-09",
+      endDate: "2025-10-12",
       warning: null,
     },
   ];

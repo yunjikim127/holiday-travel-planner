@@ -6,9 +6,7 @@ export const countries: CountryInfo[] = [
   { code: 'TH', name: 'Thailand', nameKr: '태국', emoji: '🇹🇭', region: 'Asia', popular: true },
   { code: 'VN', name: 'Vietnam', nameKr: '베트남', emoji: '🇻🇳', region: 'Asia', popular: true },
   { code: 'US', name: 'United States', nameKr: '미국', emoji: '🇺🇸', region: 'North America', popular: true },
-  { code: 'CN', name: 'China', nameKr: '중국', emoji: '🇨🇳', region: 'Asia', popular: true },
   { code: 'PH', name: 'Philippines', nameKr: '필리핀', emoji: '🇵🇭', region: 'Asia', popular: true },
-  { code: 'TW', name: 'Taiwan', nameKr: '대만', emoji: '🇹🇼', region: 'Asia', popular: true },
   { code: 'SG', name: 'Singapore', nameKr: '싱가포르', emoji: '🇸🇬', region: 'Asia', popular: true },
 
   // Europe

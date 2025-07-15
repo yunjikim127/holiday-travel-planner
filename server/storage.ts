@@ -274,34 +274,34 @@ export class MemStorage implements IStorage {
   async getTravelNews(): Promise<NewsItem[]> {
     return [
       {
-        title: "일본 벚꽃 개화 예상일 발표 (3월 말)",
-        url: "#",
-        publishedAt: "2024-02-15T10:00:00Z",
-        source: "여행 뉴스"
+        title: "2025년 7월 국내 여행지 추천 TOP 11 - 보령 머드축제와 수국 명소",
+        url: "https://brunch.co.kr/@qrssa/1094",
+        publishedAt: "2025-07-15T10:00:00Z",
+        source: "브런치"
       },
       {
-        title: "태국 비자 면제 연장 확정",
-        url: "#",
-        publishedAt: "2024-02-14T15:30:00Z",
-        source: "아시아 투데이"
+        title: "김포 애기봉 스타벅스 북한 뷰 카페로 인기 급상승",
+        url: "https://www.traveltimes.co.kr/",
+        publishedAt: "2025-07-14T15:30:00Z",
+        source: "여행신문"
       },
       {
-        title: "유럽 항공료 여름 시즌 15% 인상",
-        url: "#",
-        publishedAt: "2024-02-13T09:15:00Z",
-        source: "항공 뉴스"
+        title: "2025년 하반기 크루즈 여행 가격 총정리 - 부산-후쿠오카 3박4일",
+        url: "https://hiro.song67.co.kr/entry/2025%EB%85%84-%ED%95%9C%EA%B5%AD-%EC%B6%9C%EB%B0%9C-%ED%81%AC%EB%A3%A8%EC%A6%88-%EC%97%AC%ED%96%89-%EA%B0%80%EA%B2%A9-%EC%B4%9D%EC%A0%95%EB%A6%AC",
+        publishedAt: "2025-07-13T09:15:00Z",
+        source: "여행정보"
       },
       {
-        title: "베트남 다낭 직항편 증편",
-        url: "#",
-        publishedAt: "2024-02-12T14:20:00Z",
-        source: "여행업계"
+        title: "AI 기술 활용한 맞춤형 여행 서비스 확산",
+        url: "https://www.tripstore.kr/blog/2025년-월별-해외-여행지-추천-나라별-여행하기-좋은-시",
+        publishedAt: "2025-07-12T14:20:00Z",
+        source: "트립스토어"
       },
       {
-        title: "제주항공 동남아 노선 확대",
-        url: "#",
-        publishedAt: "2024-02-11T11:45:00Z",
-        source: "항공 소식"
+        title: "여행업계 하나투어 1위 유지, 외국계 업체 질주",
+        url: "https://www.tour.go.kr/",
+        publishedAt: "2025-07-11T11:45:00Z",
+        source: "관광지식정보시스템"
       }
     ];
   }
@@ -309,34 +309,34 @@ export class MemStorage implements IStorage {
   async getHolidayNews(): Promise<NewsItem[]> {
     return [
       {
-        title: "2024년 어린이날 대체공휴일 적용 확정",
-        url: "#",
-        publishedAt: "2024-01-20T14:00:00Z",
-        source: "정책 뉴스"
+        title: "2025년 119일 쉰다·공휴일 68일…3일 이상 연휴 6번",
+        url: "https://www.newsspace.kr/news/article.html?no=2538",
+        publishedAt: "2025-07-15T14:00:00Z",
+        source: "뉴스스페이스"
       },
       {
-        title: "근로자의 날 토요일 겹침으로 연휴 효과 감소",
-        url: "#",
-        publishedAt: "2024-01-18T16:30:00Z",
-        source: "노동부"
+        title: "2025년 10월 황금연휴 최대 10일 가능 - 효율적 연차 활용법",
+        url: "https://superkts.com/day/holiday/2025",
+        publishedAt: "2025-07-14T16:30:00Z",
+        source: "공휴일 정보"
       },
       {
-        title: "개천절 화요일로 3일 연휴 가능",
-        url: "#",
-        publishedAt: "2024-01-15T10:20:00Z",
-        source: "캘린더 분석"
+        title: "어린이날·부처님오신날 19년 만에 겹쳐 5월 6일 대체휴일 적용",
+        url: "https://publicholidays.co.kr/ko/2025-dates/",
+        publishedAt: "2025-07-13T10:20:00Z",
+        source: "공휴일 달력"
       },
       {
-        title: "한글날 수요일 배치",
-        url: "#",
-        publishedAt: "2024-01-12T13:15:00Z",
-        source: "공휴일 정책"
+        title: "2025년 설날 연휴 20년 만에 9일 황금연휴 가능",
+        url: "https://sendbee.co.kr/archive/2025년-공휴일-및-연차-쓰기-좋은-날-총정리/",
+        publishedAt: "2025-07-12T13:15:00Z",
+        source: "센드비"
       },
       {
-        title: "추석 연휴 최대 6일 가능",
-        url: "#",
-        publishedAt: "2024-01-10T09:45:00Z",
-        source: "연휴 계획"
+        title: "대체휴일 정책으로 2025년 모든 공휴일 평일 배치",
+        url: "https://www.korea.kr/",
+        publishedAt: "2025-07-11T09:45:00Z",
+        source: "대한민국 정책브리핑"
       }
     ];
   }

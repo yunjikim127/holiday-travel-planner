@@ -25,8 +25,9 @@ export default function CompactStatsBar({ user }: CompactStatsBarProps) {
             <span className="text-white">2025년 대한민국 총 공휴일: <strong className="text-yellow-300">16일</strong></span>
             <div className="text-xs text-white">
               <div>주요 연휴 기간:</div>
-              <div>1. 설 연휴: 1월 28일-30일 (<strong className="text-yellow-300">3일</strong>)</div>
-              <div>2. 추석 연휴: 10월 6일-8일 (<strong className="text-yellow-300">3일</strong>)</div>
+              <div>1. 설 연휴: 1월 28일(화)-30일(목) (<strong className="text-yellow-300">3일</strong>)</div>
+              <div>2. 어린이날: 5월 5일(월) • 추석: 10월 6일(월)-8일(수) (<strong className="text-yellow-300">3일</strong>)</div>
+              <div>3. 한글날: 10월 9일(목) • 크리스마스: 12월 25일(목)</div>
             </div>
           </div>
         </div>
@@ -39,10 +40,16 @@ export default function CompactStatsBar({ user }: CompactStatsBarProps) {
             <div className="overflow-hidden flex-1">
               <div className="animate-scroll whitespace-nowrap text-white">
                 {travelNews.map((news, index) => (
-                  <span key={index} className="text-white">
+                  <a 
+                    key={index} 
+                    href={news.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-yellow-300 underline"
+                  >
                     {news.title}
                     {index < travelNews.length - 1 && " • "}
-                  </span>
+                  </a>
                 ))}
               </div>
             </div>
@@ -54,10 +61,16 @@ export default function CompactStatsBar({ user }: CompactStatsBarProps) {
             <div className="overflow-hidden flex-1">
               <div className="animate-scroll whitespace-nowrap text-white">
                 {holidayNews.map((news, index) => (
-                  <span key={index} className="text-white">
+                  <a 
+                    key={index} 
+                    href={news.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-yellow-300 underline"
+                  >
                     {news.title}
                     {index < holidayNews.length - 1 && " • "}
-                  </span>
+                  </a>
                 ))}
               </div>
             </div>

@@ -421,11 +421,30 @@ export default function TravelCalendar({ userId, destinations }: TravelCalendarP
           <h2 id="calendar-heading" className="text-lg font-semibold">
             2025년 대한민국 총 공휴일: 16일
           </h2>
-          <div className="text-xs text-gray-600">
-            사용 연차: <span className="font-medium text-red-600">{totalUsed}일</span> / 
-            잔여 연차: <span className="font-medium text-blue-600">{remaining}일</span>
+          <div className="flex items-center space-x-4">
+            <div className="text-sm bg-red-50 px-3 py-1 rounded-full border border-red-200">
+              사용 연차: <span className="font-bold text-red-700">{totalUsed}일</span>
+            </div>
+            <div className="text-sm bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+              잔여 연차: <span className="font-bold text-blue-700">{remaining}일</span>
+            </div>
           </div>
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            vacationPlans.forEach(plan => {
+              if (plan.id) {
+                deleteVacationPlanMutation.mutate(plan.id);
+              }
+            });
+          }}
+          disabled={vacationPlans.length === 0 || deleteVacationPlanMutation.isPending}
+          className="text-red-600 border-red-300 hover:bg-red-50"
+        >
+          Reset
+        </Button>
       </CardHeader>
 
       {/* Legend */}

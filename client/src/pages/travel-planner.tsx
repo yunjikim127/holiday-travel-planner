@@ -31,20 +31,15 @@ export default function TravelPlanner() {
               <span className="bg-korean-blue text-white px-2 py-1 rounded text-xs font-medium" aria-label="2025년 버전">2025</span>
             </div>
             <nav className="flex items-center space-x-4" aria-label="사용자 메뉴">
-              <button 
-                className="text-gray-500 hover:text-gray-700" 
-                aria-label="알림"
-                title="알림"
+              <a 
+                href="https://www.myrealtrip.com/promotions/benefit"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm transition-colors"
+                aria-label="특가 보러가기"
               >
-                <Bell size={20} />
-              </button>
-              <button 
-                className="text-gray-500 hover:text-gray-700"
-                aria-label="사용자 프로필"
-                title="사용자 프로필"
-              >
-                <UserCircle size={24} />
-              </button>
+                특가 보러가기
+              </a>
             </nav>
           </div>
         </div>
