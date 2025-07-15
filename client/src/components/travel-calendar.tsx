@@ -286,7 +286,7 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
   };
 
   const calculateLeaveStats = () => {
-    const totalUsed = vacationPlans.reduce((sum, plan) => sum + plan.leaveDaysUsed, 0);
+    const totalUsed = vacationPlans.reduce((sum, plan) => sum + parseFloat(plan.leaveDaysUsed), 0);
     const totalLeaves = user?.totalLeaves || 15;
     const remaining = totalLeaves - totalUsed;
     return { totalUsed, remaining, totalLeaves };
