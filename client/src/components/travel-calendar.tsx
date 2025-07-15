@@ -139,9 +139,10 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
     
     // 이미 휴가 계획이 있는 날짜인지 확인
     const existingPlan = vacationPlans.find(plan => {
-      const startDate = new Date(plan.startDate);
-      const endDate = new Date(plan.endDate);
-      return date >= startDate && date <= endDate;
+      const startDate = new Date(plan.startDate + 'T00:00:00');
+      const endDate = new Date(plan.endDate + 'T00:00:00');
+      const checkDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      return checkDate >= startDate && checkDate <= endDate;
     });
     
     if (existingPlan) {
@@ -167,13 +168,21 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
       const startDate = new Date(Math.min(...selectedDates.map(d => d.getTime())));
       const endDate = new Date(Math.max(...selectedDates.map(d => d.getTime())));
       
+      // 로컬 날짜를 정확히 YYYY-MM-DD 형식으로 변환 (타임존 문제 해결)
+      const formatLocalDate = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+      
       const vacationPlan: InsertVacationPlan = {
         userId,
         title: selectedDates.length === 1 
           ? `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()})`
           : `휴가 계획 (${startDate.getMonth() + 1}/${startDate.getDate()} ~ ${endDate.getMonth() + 1}/${endDate.getDate()})`,
-        startDate: startDate.toISOString().split('T')[0],
-        endDate: endDate.toISOString().split('T')[0],
+        startDate: formatLocalDate(startDate),
+        endDate: formatLocalDate(endDate),
         leaveDaysUsed: selectedDates.length,
         destinations: destinations.map(d => d.countryCode),
         notes: "캘린더에서 직접 추가한 휴가",
@@ -214,11 +223,16 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
   };
 
   const isVacationDay = (date: Date): boolean => {
-    const dateStr = date.toISOString().split('T')[0];
+    // 로컬 날짜를 정확히 YYYY-MM-DD 형식으로 변환 (타임존 문제 해결)
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+    
     return vacationPlans.some(plan => {
-      const startDate = new Date(plan.startDate);
-      const endDate = new Date(plan.endDate);
-      const checkDate = new Date(dateStr);
+      const startDate = new Date(plan.startDate + 'T00:00:00');
+      const endDate = new Date(plan.endDate + 'T00:00:00');
+      const checkDate = new Date(dateStr + 'T00:00:00');
       return checkDate >= startDate && checkDate <= endDate;
     });
   };
@@ -239,7 +253,12 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
   const { totalUsed, remaining, totalLeaves } = calculateLeaveStats();
 
   const getHolidaysForDate = (date: Date) => {
-    const dateStr = date.toISOString().split('T')[0];
+    // 로컬 날짜를 정확히 YYYY-MM-DD 형식으로 변환 (타임존 문제 해결)
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+    
     const holidays: Array<{ name: string; type: string; country: string }> = [];
 
     // Korean holidays
