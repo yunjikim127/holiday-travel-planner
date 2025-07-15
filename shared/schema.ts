@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, date, json } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, date, json, numeric } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -29,7 +29,7 @@ export const vacationPlans = pgTable("vacation_plans", {
   title: text("title").notNull(),
   startDate: text("start_date").notNull(),
   endDate: text("end_date").notNull(),
-  leaveDaysUsed: integer("leave_days_used").notNull(),
+  leaveDaysUsed: numeric("leave_days_used", { precision: 3, scale: 2 }).notNull(),
   leaveType: text("leave_type").notNull().default("full"), // "full", "half", "quarter"
   destinations: json("destinations").$type<string[]>().notNull(),
   notes: text("notes"),

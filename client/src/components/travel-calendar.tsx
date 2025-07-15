@@ -546,12 +546,12 @@ export default function TravelCalendar({ userId, destinations, onDateChange }: T
 
         {/* 휴가 유형 선택 다이얼로그 */}
         <Dialog open={leaveTypeDialogOpen} onOpenChange={setLeaveTypeDialogOpen}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md" aria-describedby="vacation-type-description">
             <DialogHeader>
               <DialogTitle>휴가 유형 선택</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <p className="text-sm text-gray-600">
+              <p id="vacation-type-description" className="text-sm text-gray-600">
                 선택한 날짜에 어떤 종류의 휴가를 사용하시겠습니까?
               </p>
               <Select value={selectedLeaveType} onValueChange={(value: "full" | "half" | "quarter") => setSelectedLeaveType(value)}>
