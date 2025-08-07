@@ -17,7 +17,7 @@ export default function CompactStatsBar({ user }: CompactStatsBarProps) {
   const remainingLeaves = user ? user.totalLeaves - user.usedLeaves : 0;
 
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+    <div className="bg-gradient-to-r from-red-600 to-red-700 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
 
         
