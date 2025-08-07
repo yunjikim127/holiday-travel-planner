@@ -35,3 +35,6 @@ function App() {
 }
 
 export default App;
+
+// Test deployment workflow - January 20, 2025
+// Updated via Cursor -> GitHub -> Replit auto-deploy
