@@ -26,12 +26,12 @@ export default function TravelPlanner() {
   return (
     <div className="min-h-screen bg-gray-50 font-noto">
       {/* Header */}
-      <header className="bg-red-600 shadow-sm border-b" role="banner">
+      <header className="bg-red-500 shadow-sm border-b" role="banner">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <h1 className="text-xl font-bold text-white">🇰🇷 한국 공휴일 여행 플래너</h1>
-              <span className="bg-red-700 text-white px-2 py-1 rounded text-xs font-medium" aria-label="2025년 버전">2025</span>
+              <span className="bg-red-600 text-white px-2 py-1 rounded text-xs font-medium" aria-label="2025년 버전">2025</span>
             </div>
             <nav className="flex items-center space-x-4" aria-label="사용자 메뉴">
               <a 
